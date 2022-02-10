@@ -1,3 +1,5 @@
+package src;
+
 public class Main{
   //testing this pls work
   public static void main(String[] args) {
@@ -7,6 +9,7 @@ public class Main{
         System.out.println("fortnite");
         System.out.println("forge");
         System.out.println("uhhhh");
+        System.out.println("let me know if you get this");
     
     }
 }
