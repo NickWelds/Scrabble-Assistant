@@ -1,5 +1,3 @@
-package src;
-
 public interface Interface {
 
     static void get_parameters(){}

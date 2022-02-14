@@ -1,5 +1,3 @@
-package src;
-
 public class Score {
 
     public static void calculate_word_scores(){}

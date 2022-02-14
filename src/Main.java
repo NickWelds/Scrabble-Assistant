@@ -1,5 +1,3 @@
-package src;
-
 public class Main{
   //testing this pls work
   public static void main(String[] args) {
