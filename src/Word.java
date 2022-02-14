@@ -1,5 +1,3 @@
-package src;
-
 public class Word {
 
     public static void find_words(){}
