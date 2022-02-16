@@ -33,7 +33,7 @@ public class GUI extends Application {
     public void textFieldSizeSet(ArrayList<TextField> allTexts){
         for (TextField i: allTexts){
             i.setPrefSize(50,50);
-            i.setFont(Font.loadFont(getClass().getResourceAsStream("scrabble-font/Scramble-KVBe.ttf"), 20));
+            i.setFont(Font.loadFont(getClass().getResourceAsStream("scrabble-font/Scramble-KVBe.ttf"), 10));
         }
 
     }
