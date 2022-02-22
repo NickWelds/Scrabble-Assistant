@@ -33,8 +33,13 @@ public class Word {
         return true;
     }
 
-    public boolean restrictionCheck() {
-        return false;
+    public boolean restrictionCheck(char[] restrictions, String testWord) {
+        for (int i = 0; i < restrictions.length; i++) {
+            if (restrictions[i] != testWord.charAt(i) && restrictions[i] != '\0') {
+                return false;
+            }
+        }
+        return true
     }
 
     public void trimPossibleWords(){}
