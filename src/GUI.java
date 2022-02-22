@@ -2,10 +2,6 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,10 +12,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -30,10 +26,13 @@ public class GUI extends Application {
 
     public void textFieldSizeSet(ArrayList<TextField> allTexts){
         for (TextField i: allTexts){
-            i.setPrefSize(70,70);
-            i.setFont(Font.loadFont("file:scrabble-font" + File.separator + "Scramble-KVBe.ttf", 25));
+            i.setPrefSize(50,50);
+
+            i.setFont(Font.loadFont("file:scrabble-font" + File.separator + "Scramble-KVBe.ttf", 30));
 
             i.setPadding(new Insets(0,0,0,0));
+
+            i.setAlignment(Pos.CENTER);
 
             i.lengthProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue.intValue() > oldValue.intValue()) {
@@ -43,7 +42,26 @@ public class GUI extends Application {
                 }
             });
         }
+    }
 
+    public void textFieldSize(ArrayList<TextField> allTexts){
+        for (TextField i: allTexts){
+            i.setPrefSize(50,50);
+
+            i.setFont(Font.loadFont("file:scrabble-font" + File.separator + "Scramble-KVBe.ttf", 30));
+
+            i.setPadding(new Insets(0,0,0,0));
+
+            i.setAlignment(Pos.CENTER);
+
+            i.lengthProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.intValue() > oldValue.intValue()) {
+                    if (i.getText().length() >= 1) {
+                        i.setText(i.getText().substring(0, 1));
+                    }
+                }
+            });
+        }
     }
 
     //Creates dimension of the window
@@ -63,7 +81,7 @@ public class GUI extends Application {
     protected static int fireworkType = 0;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         //Creates root and scene
         Group root = new Group();
         Scene scene = new Scene(root);
@@ -76,10 +94,12 @@ public class GUI extends Application {
 
         //Font scrabbleFont = Font.loadFont(GUI.class.getResource("scrabble-font/Scramble-KVBe.ttf").toExternalForm(), 10);
 
-        HBox hbox = new HBox ();
-        hbox.setPadding(new Insets(0, 12, 0, 12) );
-        hbox.setSpacing(10);
-        hbox.setStyle("-fx-background-colour: #336699; ");
+
+        //TODO Input Letters
+        HBox letterInput = new HBox ();
+        letterInput.setPadding(new Insets(0, 12, 0, 12) );
+        letterInput.setSpacing(10);
+        letterInput.setStyle("-fx-background-colour: #336699; ");
 
         TextField letterOne = new TextField();
         TextField letterTwo = new TextField();
@@ -96,16 +116,57 @@ public class GUI extends Application {
 
         textFieldSizeSet(allLetters);
 
-
-        hbox.setPrefSize(600,100);
-        hbox.setLayoutX(100);
-        hbox.setLayoutY(100);
-        hbox.setAlignment(Pos.CENTER);
+        letterInput.setPrefSize(600,100);
+        letterInput.setLayoutX(100);
+        letterInput.setLayoutY(100);
+        letterInput.setAlignment(Pos.CENTER);
         for (TextField i: allLetters){
-            hbox.getChildren().add(i);
+            letterInput.getChildren().add(i);
         }
 
-        root.getChildren().add(hbox);
+        root.getChildren().add(letterInput);
+
+        //TODO Input Length of word
+
+        HBox lengthInput = new HBox ();
+        lengthInput.setPadding(new Insets(0, 12, 0, 12) );
+        lengthInput.setSpacing(10);
+        lengthInput.setStyle("-fx-background-colour: #336699; ");
+
+        Text lengthOfWordText = new Text();
+        TextField lengthOfWordInput = new TextField();
+
+        lengthOfWordText.setText("Input the Length of Desired Word:");
+
+        lengthOfWordInput.setPrefSize(50,50);
+        lengthOfWordInput.setPadding(new Insets(0,0,0,0));
+        lengthOfWordInput.setAlignment(Pos.CENTER);
+
+        lengthOfWordInput.lengthProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > oldValue.intValue()) {
+                if (lengthOfWordInput.getText().length() >= 1) {
+                    lengthOfWordInput.setText(lengthOfWordInput.getText().substring(0, 1));
+                }
+            }
+        });
+
+        lengthInput.setPrefSize(600,100);
+        lengthInput.setLayoutX(100);
+        lengthInput.setLayoutY(200);
+        lengthInput.setAlignment(Pos.CENTER);
+        lengthInput.getChildren().add(lengthOfWordText);
+        lengthInput.getChildren().add(lengthOfWordInput);
+
+
+        root.getChildren().add(lengthInput);
+
+
+
+
+
+
+
+
 
         gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
@@ -125,20 +186,17 @@ public class GUI extends Application {
         // to switch to the next frame
         KeyFrame frames = new KeyFrame(
                 Duration.seconds(0.017),
-                new EventHandler<ActionEvent>(){
+                event -> {
 
-                    public void handle(ActionEvent event){
+                    GraphicsContext gc1 = canvas.getGraphicsContext2D();
 
-                        GraphicsContext gc = canvas.getGraphicsContext2D();
+                    //Clears the controller section at the bottom of the Scene
+                    gc1.clearRect(0, 0, WIDTH, HEIGHT);
 
-                        //Clears the controller section at the bottom of the Scene
-                        gc.clearRect(0, 0, WIDTH, HEIGHT);
+                    //Repaints the scene
+                    gc1.setFill(new Color(0.71764705882,0,0.02352941176, 1));
+                    gc1.fillRect(0, 0, WIDTH, HEIGHT);
 
-                        //Repaints the scene
-                        gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
-                        gc.fillRect(0, 0, WIDTH, HEIGHT);
-
-                    }
                 }
         );
 
