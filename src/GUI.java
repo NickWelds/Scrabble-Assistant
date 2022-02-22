@@ -1,14 +1,3 @@
-/**
- * Main
- * @author: Nicholas Milin
- *
- * This class represents the Display of the Firework Simulation.
- * Users will be able to use the space bar to launch fireworks wherever their mouse is located.
- * At the bottom of the window, there is an area with controls for the firework which the user
- * can use to change the colour of the firework, the type of firework and clear all fireworks.
- *
- */
-
 //Imports all necessary packages to run the Main class
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -24,6 +13,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -33,39 +23,28 @@ import javafx.stage.Stage;
 import javafx.scene.input.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+
 import javafx.util.Duration;
 
 
 public class GUI extends Application {
 
-    /**
-     * Creates and fills in rectangles which are used for the background,
-     * controls and the colour selector preview.
-     *
-     * @param gc GraphicsContext
-     */
-    public void sceneColourFill(GraphicsContext gc){
-        //Fills background of the simulation area semi transparent black
-        gc.setFill(new Color(0,0,0,0.1));
-        gc.fillRect(0, 0, WIDTH, 600);
+    public void textFieldSizeSet(ArrayList<TextField> allTexts){
+        for (TextField i: allTexts){
+            i.setPrefSize(50,50);
+            i.setFont(Font.loadFont(getClass().getResourceAsStream("scrabble-font/Scramble-KVBe.ttf"), 10));
+        }
 
-        //Bottom of the Canvas which contains the controls
-        gc.setFill(Color.GREY);
-        gc.fillRect(0, 600, WIDTH, 100);
-
-        //Visual Box for the colour of the firework
-        gc.setFill((new Color(redValue, greenValue, blueValue,1)));
-        gc.fillRect(12.5, 612.5, 75, 75);
     }
 
-
     //Creates dimension of the window
-    public static final int WIDTH = 1000;
-    public static final int HEIGHT = 700;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 800;
 
     //Initial Mouse X and Y position
-    public double mouseX = 500;
-    public double mouseY = 500;
+    public double mouseX = (double)WIDTH/2;
+    public double mouseY = (double)HEIGHT/2;
 
     //Colour of the firework
     protected static double redValue = 1;
@@ -75,12 +54,6 @@ public class GUI extends Application {
     //Type of firework being launched
     protected static int fireworkType = 0;
 
-    /**
-     * Processes and adds everything to the scene
-     *
-     * @param stage stage
-     * @throws IOException
-     */
     @Override
     public void start(Stage stage) throws IOException {
         //Creates root and scene
@@ -92,15 +65,48 @@ public class GUI extends Application {
         root.getChildren().add(canvas);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        sceneColourFill(gc);
+
+        Font scrabbleFont = Font.loadFont(getClass().getResourceAsStream("scrabble-font/Scramble-KVBe.ttf"), 20);
+
+        HBox hbox = new HBox ();
+        hbox.setPadding(new Insets(0, 12, 0, 12) );
+        hbox.setSpacing(10);
+        hbox.setStyle("-fx-background-colour: #336699; ");
+
+        TextField letterOne = new TextField();
+        TextField letterTwo = new TextField();
+        TextField letterThree = new TextField();
+        TextField letterFour = new TextField();
+        TextField letterFive = new TextField();
+        TextField letterSix = new TextField();
+        TextField letterSeven = new TextField();
+        TextField letterEight = new TextField();
+
+        ArrayList<TextField> allLetters = new ArrayList<>();
+
+        Collections.addAll(allLetters, letterOne, letterTwo, letterThree, letterFour,
+                letterFive, letterSix, letterSeven, letterEight);
+
+        textFieldSizeSet(allLetters);
+
+
+        hbox.setPrefSize(600,100);
+        hbox.setLayoutX(100);
+        hbox.setLayoutY(100);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.getChildren().addAll(letterOne, letterTwo, letterThree, letterFour, letterFive,
+                letterSix, letterSeven, letterEight);
+
+        root.getChildren().add(hbox);
+
+        gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
+        gc.fillRect(0, 0, WIDTH, HEIGHT);
 
         //Updates the X and Y location of the mouse when it is moved
         root.setOnMouseMoved(event -> {
             mouseX = event.getSceneX()-10;
             mouseY = event.getSceneY()-10;
         });
-
-
 
 
         //Setup Animation
@@ -113,21 +119,16 @@ public class GUI extends Application {
                 Duration.seconds(0.017),
                 new EventHandler<ActionEvent>(){
 
-                    /**
-                     * Displays everything on the screen.
-                     *
-                     * @param event ActionEvent
-                     */
-                    @Override
                     public void handle(ActionEvent event){
 
                         GraphicsContext gc = canvas.getGraphicsContext2D();
 
                         //Clears the controller section at the bottom of the Scene
-                        gc.clearRect(0, 601, WIDTH, 100);
+                        gc.clearRect(0, 0, WIDTH, HEIGHT);
 
                         //Repaints the scene
-                        sceneColourFill(gc);
+                        gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
+                        gc.fillRect(0, 0, WIDTH, HEIGHT);
 
                     }
                 }
