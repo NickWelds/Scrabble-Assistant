@@ -34,15 +34,20 @@ public class Word {
     }
 
     public boolean restrictionCheck(char[] restrictions, String testWord) {
-        for (int i = 0; i < restrictions.length && i < testWord.length(); i++) {
-            if (Character.toUpperCase(restrictions[i]) != testWord.charAt(i) && restrictions[i] != '\0') {
+        int i = 0;
+        while(i < restrictions.length) {
+            if (i >= testWord.length()) {
+                if (restrictions[i] != '\0' ) {
+                    return false; // because there are restrictions past the length of the word, it is not valid
+                }
+            }
+            else if (Character.toUpperCase(restrictions[i]) != testWord.charAt(i) && restrictions[i] != '\0') {
                 return false;
             }
+            i++;
         }
         return true;
     }
-
-    public void trimPossibleWords(){}
 
     public void getWordsFromDictionary(int wordlength){
         Dictionary dictionary = new Dictionary();
