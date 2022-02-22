@@ -3,11 +3,11 @@ import java.util.ArrayList;
 public class Word {
     ArrayList<String> possibleWordList;
 
-    public ArrayList<String> getAllPossibleWords(char[] letters, int wordlength){
+    public ArrayList<String> getAllPossibleWords(char[] letters, char[] restrictions, int wordlength){
         getWordsFromDictionary(wordlength);
         int iterator = 0;
         while(iterator < possibleWordList.size()) {
-            if (!overallValidityCheck(letters, possibleWordList.get(iterator))) {
+            if (!overallValidityCheck(letters, possibleWordList.get(iterator)) || !restrictionCheck(restrictions, possibleWordList.get(iterator))) {
                 possibleWordList.remove(iterator);
                 iterator--;
             }
@@ -34,8 +34,8 @@ public class Word {
     }
 
     public boolean restrictionCheck(char[] restrictions, String testWord) {
-        for (int i = 0; i < restrictions.length; i++) {
-            if (restrictions[i] != testWord.charAt(i) && restrictions[i] != '\0') {
+        for (int i = 0; i < restrictions.length && i < testWord.length(); i++) {
+            if (Character.toUpperCase(restrictions[i]) != testWord.charAt(i) && restrictions[i] != '\0') {
                 return false;
             }
         }
