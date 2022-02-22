@@ -39,7 +39,7 @@ public class Word {
                 return false;
             }
         }
-        return true
+        return true;
     }
 
     public void trimPossibleWords(){}
