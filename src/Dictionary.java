@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Dictionary {
-    String filename = "Scrabble-Assistant" + File.separator + "Scrabble Words.txt";
+    String filename = "Scrabble Words.txt";
 
     public ArrayList<String> getAllWordsByLength(int wordlength) {
         ArrayList<String> wordsUnderLength = new ArrayList<>();
