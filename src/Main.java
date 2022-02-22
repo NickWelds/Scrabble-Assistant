@@ -1,7 +1,8 @@
 public class Main{
   //testing this pls work
   public static void main(String[] args) {
-        Dictionary dictionary = new Dictionary();
-        dictionary.getAllWordsByLength(6);
+        Word word = new Word();
+        char[] test = {'a','a','h'};
+        word.getAllPossibleWords(test, 2);
     }
 }

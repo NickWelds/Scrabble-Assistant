@@ -1,12 +1,10 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Word {
     ArrayList<String> possibleWordList;
 
-    public void getAllPossibleWords(char[] letters, int wordlength){
-        getWordList(wordlength);
+    public ArrayList<String> getAllPossibleWords(char[] letters, int wordlength){
+        getWordsFromDictionary(wordlength);
         int iterator = 0;
         while(iterator < possibleWordList.size()) {
             if (!overallValidityCheck(letters, possibleWordList.get(iterator))) {
@@ -15,7 +13,7 @@ public class Word {
             }
             iterator++;
         }
-        System.out.println(possibleWordList);
+        return possibleWordList;
     }
 
     public boolean overallValidityCheck(char[] letters, String testWord) {
@@ -41,14 +39,9 @@ public class Word {
 
     public void trimPossibleWords(){}
 
-    public void getWordList(int wordlength){
+    public void getWordsFromDictionary(int wordlength){
         Dictionary dictionary = new Dictionary();
         possibleWordList = dictionary.getAllWordsByLength(wordlength);
         System.out.println(possibleWordList);
-        /*
-        possibleWordList = new ArrayList<>();
-        possibleWordList.add("ab");
-
-         */
     }
 }
