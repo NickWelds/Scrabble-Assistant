@@ -2,25 +2,23 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.input.KeyEvent;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,8 +30,18 @@ public class GUI extends Application {
 
     public void textFieldSizeSet(ArrayList<TextField> allTexts){
         for (TextField i: allTexts){
-            i.setPrefSize(50,50);
-            i.setFont(Font.loadFont(getClass().getResourceAsStream("scrabble-font/Scramble-KVBe.ttf"), 10));
+            i.setPrefSize(70,70);
+            i.setFont(Font.loadFont("file:scrabble-font" + File.separator + "Scramble-KVBe.ttf", 25));
+
+            i.setPadding(new Insets(0,0,0,0));
+
+            i.lengthProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.intValue() > oldValue.intValue()) {
+                    if (i.getText().length() >= 1) {
+                        i.setText(i.getText().substring(0, 1));
+                    }
+                }
+            });
         }
 
     }
@@ -66,7 +74,7 @@ public class GUI extends Application {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        Font scrabbleFont = Font.loadFont(getClass().getResourceAsStream("scrabble-font/Scramble-KVBe.ttf"), 20);
+        //Font scrabbleFont = Font.loadFont(GUI.class.getResource("scrabble-font/Scramble-KVBe.ttf").toExternalForm(), 10);
 
         HBox hbox = new HBox ();
         hbox.setPadding(new Insets(0, 12, 0, 12) );
@@ -83,7 +91,6 @@ public class GUI extends Application {
         TextField letterEight = new TextField();
 
         ArrayList<TextField> allLetters = new ArrayList<>();
-
         Collections.addAll(allLetters, letterOne, letterTwo, letterThree, letterFour,
                 letterFive, letterSix, letterSeven, letterEight);
 
@@ -94,8 +101,9 @@ public class GUI extends Application {
         hbox.setLayoutX(100);
         hbox.setLayoutY(100);
         hbox.setAlignment(Pos.CENTER);
-        hbox.getChildren().addAll(letterOne, letterTwo, letterThree, letterFour, letterFive,
-                letterSix, letterSeven, letterEight);
+        for (TextField i: allLetters){
+            hbox.getChildren().add(i);
+        }
 
         root.getChildren().add(hbox);
 
