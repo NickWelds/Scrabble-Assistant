@@ -1,21 +1,19 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Word {
     ArrayList<String> possibleWordList;
 
-    public void getAllPossibleWords(char[] letters, int wordlength){
-        getWordList(wordlength);
+    public ArrayList<String> getAllPossibleWords(char[] letters, char[] restrictions, int wordlength){
+        getWordsFromDictionary(wordlength);
         int iterator = 0;
         while(iterator < possibleWordList.size()) {
-            if (!overallValidityCheck(letters, possibleWordList.get(iterator))) {
+            if (!overallValidityCheck(letters, possibleWordList.get(iterator)) || !restrictionCheck(restrictions, possibleWordList.get(iterator))) {
                 possibleWordList.remove(iterator);
                 iterator--;
             }
             iterator++;
         }
-        System.out.println(possibleWordList);
+        return possibleWordList;
     }
 
     public boolean overallValidityCheck(char[] letters, String testWord) {
@@ -35,20 +33,25 @@ public class Word {
         return true;
     }
 
-    public boolean restrictionCheck() {
-        return false;
+    public boolean restrictionCheck(char[] restrictions, String testWord) {
+        int i = 0;
+        while(i < restrictions.length) {
+            if (i >= testWord.length()) {
+                if (restrictions[i] != '\0' ) {
+                    return false; // because there are restrictions past the length of the word, it is not valid
+                }
+            }
+            else if (Character.toUpperCase(restrictions[i]) != testWord.charAt(i) && restrictions[i] != '\0') {
+                return false;
+            }
+            i++;
+        }
+        return true;
     }
 
-    public void trimPossibleWords(){}
-
-    public void getWordList(int wordlength){
+    public void getWordsFromDictionary(int wordlength){
         Dictionary dictionary = new Dictionary();
         possibleWordList = dictionary.getAllWordsByLength(wordlength);
         System.out.println(possibleWordList);
-        /*
-        possibleWordList = new ArrayList<>();
-        possibleWordList.add("ab");
-
-         */
     }
 }
