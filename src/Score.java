@@ -16,7 +16,7 @@ public class Score {
     Word word = new Word();
 
     public void calculate_scores(){
-        word.getAllPossibleWords(new char[]{'i', 'n', 'e', 'a', 'f', 'l', 'j'}, 3);
+        word.getAllPossibleWords(new char[]{'i', 'n', 'e', 'a', 'f', 'l', 'j'}, new char[]{'\0', 'a', '\0'}, 3);
 
         //goes through all words
         for (int index = 0; index < word.possibleWordList.size(); index++){
