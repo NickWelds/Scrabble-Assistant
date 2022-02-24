@@ -5,6 +5,13 @@ import java.util.Scanner;
 public class Dictionary {
     String filename = "Scrabble Words.txt";
 
+    /**
+     * getAllWordsByLength reads the dictionary file and adds every word under a given length
+     * to an ArrayList.
+     * @param wordlength The maximum possible length a word can be.
+     * @return An ArrayList containing all words under the wordLength.
+     */
+
     public ArrayList<String> getAllWordsByLength(int wordlength) {
         ArrayList<String> wordsUnderLength = new ArrayList<>();
         try{
