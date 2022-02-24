@@ -74,7 +74,7 @@ public class GUI extends Application {
     //Type of firework being launched
     protected static int fireworkType = 0;
 
-
+    public int numOfRestrictions = 7;
 
     @Override
     public void start(Stage stage) {
@@ -135,15 +135,59 @@ public class GUI extends Application {
         lengthInput.setStyle("-fx-background-colour: #336699; ");
 
         Text textWordLength = new Text();
+        textWordLength.setText("Input the Length of Desired Word:");
+
         Slider sliderWordLength = new Slider(2,15, 7);
+
+        sliderWordLength.setStyle("-fx-tick-label-fill: #336699;");
 
         sliderWordLength.setShowTickLabels(true);
         sliderWordLength.setShowTickMarks(true);
+        sliderWordLength.setSnapToTicks(true);
+
         sliderWordLength.setMajorTickUnit(1);
+        sliderWordLength.setMinorTickCount(0);
         sliderWordLength.setBlockIncrement(1);
+
         sliderWordLength.setPrefSize(300,50);
 
-        textWordLength.setText("Input the Length of Desired Word:");
+        textWordLength.setFill(Color.WHITE);
+
+        textWordLength.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+
+        lengthInput.setPrefSize(700,100);
+        lengthInput.setLayoutX(50);
+        lengthInput.setLayoutY(200);
+        lengthInput.setAlignment(Pos.CENTER);
+        lengthInput.getChildren().add(textWordLength);
+        lengthInput.getChildren().add(sliderWordLength);
+
+        root.getChildren().add(lengthInput);
+
+
+
+        //TODO Letter Restrictions
+
+        HBox restrictionsInput = new HBox ();
+        restrictionsInput.setPadding(new Insets(0, 12, 0, 12) );
+        restrictionsInput.setSpacing(10);
+        restrictionsInput.setStyle("-fx-background-colour: #336699; ");
+
+        ArrayList<TextField> letterRestrictions = new ArrayList<>();
+        for(int i = 0; i < sliderWordLength.getValue(); i++){
+            letterRestrictions.add(new TextField());
+        }
+
+        textFieldSizeSet(letterRestrictions, acceptableValues);
+
+        restrictionsInput.setPrefSize(700,100);
+        restrictionsInput.setLayoutX(50);
+        restrictionsInput.setLayoutY(300);
+        restrictionsInput.setAlignment(Pos.CENTER);
+        for (TextField i: letterRestrictions){
+            restrictionsInput.getChildren().add(i);
+        }
+        root.getChildren().add(restrictionsInput);
 
         /*
         TextField textFieldWordLength = new TextField();
@@ -179,22 +223,9 @@ public class GUI extends Application {
 
 
         textFieldWordLength.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-
          */
 
-        textWordLength.setFill(Color.WHITE);
 
-        textWordLength.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-
-        lengthInput.setPrefSize(700,100);
-        lengthInput.setLayoutX(100);
-        lengthInput.setLayoutY(200);
-        lengthInput.setAlignment(Pos.CENTER);
-        lengthInput.getChildren().add(textWordLength);
-        lengthInput.getChildren().add(sliderWordLength);
-
-
-        root.getChildren().add(lengthInput);
 
 
 
@@ -232,6 +263,8 @@ public class GUI extends Application {
                     //Repaints the scene
                     gc1.setFill(new Color(0.71764705882,0,0.02352941176, 1));
                     gc1.fillRect(0, 0, WIDTH, HEIGHT);
+
+                    numOfRestrictions = (int)sliderWordLength.getValue();
 
                 }
         );
