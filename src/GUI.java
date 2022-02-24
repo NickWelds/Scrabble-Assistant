@@ -8,12 +8,18 @@ import javafx.scene.Scene;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TextField;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,7 +30,9 @@ import javafx.util.Duration;
 
 public class GUI extends Application {
 
-    public void textFieldSizeSet(ArrayList<TextField> allTexts){
+
+
+    public void textFieldSizeSet(ArrayList<TextField> allTexts, ArrayList<Character> acceptableValues){
         for (TextField i: allTexts){
             i.setPrefSize(50,50);
 
@@ -41,24 +49,10 @@ public class GUI extends Application {
                     }
                 }
             });
-        }
-    }
 
-    public void textFieldSize(ArrayList<TextField> allTexts){
-        for (TextField i: allTexts){
-            i.setPrefSize(50,50);
-
-            i.setFont(Font.loadFont("file:scrabble-font" + File.separator + "Scramble-KVBe.ttf", 30));
-
-            i.setPadding(new Insets(0,0,0,0));
-
-            i.setAlignment(Pos.CENTER);
-
-            i.lengthProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue.intValue() > oldValue.intValue()) {
-                    if (i.getText().length() >= 1) {
-                        i.setText(i.getText().substring(0, 1));
-                    }
+            i.textProperty().addListener((observable, oldValue, newValue) ->{
+                if (!newValue.matches("\\sa-zA-Z*")) {
+                    i.setText(newValue.replaceAll("[^\\sa-zA-Z]", ""));
                 }
             });
         }
@@ -80,6 +74,8 @@ public class GUI extends Application {
     //Type of firework being launched
     protected static int fireworkType = 0;
 
+
+
     @Override
     public void start(Stage stage) {
         //Creates root and scene
@@ -91,6 +87,11 @@ public class GUI extends Application {
         root.getChildren().add(canvas);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        ArrayList<Character> acceptableValues = new ArrayList<>();
+        for (int i = 65; i <= 26 + 65; i ++){
+            acceptableValues.add((char)i);
+        }
 
         //Font scrabbleFont = Font.loadFont(GUI.class.getResource("scrabble-font/Scramble-KVBe.ttf").toExternalForm(), 10);
 
@@ -114,7 +115,7 @@ public class GUI extends Application {
         Collections.addAll(allLetters, letterOne, letterTwo, letterThree, letterFour,
                 letterFive, letterSix, letterSeven, letterEight);
 
-        textFieldSizeSet(allLetters);
+        textFieldSizeSet(allLetters, acceptableValues);
 
         letterInput.setPrefSize(600,100);
         letterInput.setLayoutX(100);
@@ -133,29 +134,64 @@ public class GUI extends Application {
         lengthInput.setSpacing(10);
         lengthInput.setStyle("-fx-background-colour: #336699; ");
 
-        Text lengthOfWordText = new Text();
-        TextField lengthOfWordInput = new TextField();
+        Text textWordLength = new Text();
+        Slider sliderWordLength = new Slider(2,15, 7);
 
-        lengthOfWordText.setText("Input the Length of Desired Word:");
+        sliderWordLength.setShowTickLabels(true);
+        sliderWordLength.setShowTickMarks(true);
+        sliderWordLength.setMajorTickUnit(1);
+        sliderWordLength.setBlockIncrement(1);
+        sliderWordLength.setPrefSize(300,50);
 
-        lengthOfWordInput.setPrefSize(50,50);
-        lengthOfWordInput.setPadding(new Insets(0,0,0,0));
-        lengthOfWordInput.setAlignment(Pos.CENTER);
+        textWordLength.setText("Input the Length of Desired Word:");
 
-        lengthOfWordInput.lengthProperty().addListener((observable, oldValue, newValue) -> {
+        /*
+        TextField textFieldWordLength = new TextField();
+        textFieldWordLength.setPrefSize(50,50);
+        textFieldWordLength.setPadding(new Insets(0,0,0,0));
+        textFieldWordLength.setAlignment(Pos.CENTER);
+
+        textFieldWordLength.lengthProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() > oldValue.intValue()) {
-                if (lengthOfWordInput.getText().length() >= 1) {
-                    lengthOfWordInput.setText(lengthOfWordInput.getText().substring(0, 1));
+                if (textFieldWordLength.getText().length() >= 2) {
+                    if((Integer.parseInt(textFieldWordLength.getText()) > 15 || Integer.parseInt(textFieldWordLength.getText()) < 2)){
+                        textFieldWordLength.setText(textFieldWordLength.getText().substring(0, 2));
+                    }
+
                 }
             }
         });
 
-        lengthInput.setPrefSize(600,100);
+        textFieldWordLength.textProperty().addListener((observable, oldValue, newValue) ->{
+            if(!newValue.matches("\\d*")){
+                textFieldWordLength.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+
+        if(Integer.parseInt(textFieldWordLength.getText()) > 15) {
+            textFieldWordLength.setText("15");
+        }
+
+        if(Integer.parseInt(textFieldWordLength.getText()) < 2) {
+            textFieldWordLength.setText("2");
+        }
+
+
+        textFieldWordLength.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+
+         */
+
+        textWordLength.setFill(Color.WHITE);
+
+        textWordLength.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+
+        lengthInput.setPrefSize(700,100);
         lengthInput.setLayoutX(100);
         lengthInput.setLayoutY(200);
         lengthInput.setAlignment(Pos.CENTER);
-        lengthInput.getChildren().add(lengthOfWordText);
-        lengthInput.getChildren().add(lengthOfWordInput);
+        lengthInput.getChildren().add(textWordLength);
+        lengthInput.getChildren().add(sliderWordLength);
 
 
         root.getChildren().add(lengthInput);
