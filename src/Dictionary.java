@@ -2,6 +2,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Is responsible for interfacing with dictionary text file.
+ * @author Matt Dobaj
+ */
+
 public class Dictionary {
     String filename = "Scrabble Words.txt";
 

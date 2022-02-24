@@ -1,5 +1,11 @@
 import java.util.ArrayList;
 
+/**
+ * Is responsible for finding all possible words given different letter restrictions.
+ * Interacts with Dictionary Class.
+ * @author Matt Dobaj
+ */
+
 public class Word {
     ArrayList<String> possibleWordList;
 
