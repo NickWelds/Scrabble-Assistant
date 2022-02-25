@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -58,6 +59,17 @@ public class GUI extends Application {
         }
     }
 
+    public HBox textSet(HBox hbox, Text text, int y, int size, String textDisplay){
+        hbox.setPrefSize(800, 50);
+        hbox.setLayoutY(y);
+        text.setFill(Color.WHITE);
+        text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, size));
+        text.setText(textDisplay);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.getChildren().add(text);
+        return hbox;
+    }
+
     //Creates dimension of the window
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
@@ -93,8 +105,7 @@ public class GUI extends Application {
             acceptableValues.add((char)i);
         }
 
-        //Font scrabbleFont = Font.loadFont(GUI.class.getResource("scrabble-font/Scramble-KVBe.ttf").toExternalForm(), 10);
-
+        root.getChildren().add(textSet(new HBox(), new Text(), 80, 15, "Input Your Scrabble Letters"));
 
         //TODO Input Letters
         HBox letterInput = new HBox ();
@@ -102,18 +113,11 @@ public class GUI extends Application {
         letterInput.setSpacing(10);
         letterInput.setStyle("-fx-background-colour: #336699; ");
 
-        TextField letterOne = new TextField();
-        TextField letterTwo = new TextField();
-        TextField letterThree = new TextField();
-        TextField letterFour = new TextField();
-        TextField letterFive = new TextField();
-        TextField letterSix = new TextField();
-        TextField letterSeven = new TextField();
-        TextField letterEight = new TextField();
-
         ArrayList<TextField> allLetters = new ArrayList<>();
-        Collections.addAll(allLetters, letterOne, letterTwo, letterThree, letterFour,
-                letterFive, letterSix, letterSeven, letterEight);
+
+        for(int i = 0; i < 8; i++){
+            allLetters.add(new TextField());
+        }
 
         textFieldSizeSet(allLetters, acceptableValues);
 
@@ -134,12 +138,11 @@ public class GUI extends Application {
         lengthInput.setSpacing(10);
         lengthInput.setStyle("-fx-background-colour: #336699; ");
 
-        Text textWordLength = new Text();
-        textWordLength.setText("Input the Length of Desired Word:");
+        textSet(lengthInput, new Text(), 0, 20, "Input the Length of Desired Word:");
 
-        Slider sliderWordLength = new Slider(2,15, 7);
+        Slider sliderWordLength = new Slider(2,15, 8);
 
-        sliderWordLength.setStyle("-fx-tick-label-fill: #336699;");
+        sliderWordLength.setStyle("-fx-tick-label-fill: #ffffff;");
 
         sliderWordLength.setShowTickLabels(true);
         sliderWordLength.setShowTickMarks(true);
@@ -151,15 +154,10 @@ public class GUI extends Application {
 
         sliderWordLength.setPrefSize(300,50);
 
-        textWordLength.setFill(Color.WHITE);
-
-        textWordLength.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-
         lengthInput.setPrefSize(700,100);
         lengthInput.setLayoutX(50);
         lengthInput.setLayoutY(200);
         lengthInput.setAlignment(Pos.CENTER);
-        lengthInput.getChildren().add(textWordLength);
         lengthInput.getChildren().add(sliderWordLength);
 
         root.getChildren().add(lengthInput);
@@ -174,76 +172,50 @@ public class GUI extends Application {
         restrictionsInput.setStyle("-fx-background-colour: #336699; ");
 
         ArrayList<TextField> letterRestrictions = new ArrayList<>();
-        for(int i = 0; i < sliderWordLength.getValue(); i++){
-            letterRestrictions.add(new TextField());
-        }
-
-        textFieldSizeSet(letterRestrictions, acceptableValues);
 
         restrictionsInput.setPrefSize(700,100);
         restrictionsInput.setLayoutX(50);
-        restrictionsInput.setLayoutY(300);
+        restrictionsInput.setLayoutY(400);
         restrictionsInput.setAlignment(Pos.CENTER);
-        for (TextField i: letterRestrictions){
-            restrictionsInput.getChildren().add(i);
-        }
+
+
+        //TODO Commit button for restrictions
+
+        Button buttonWordLengthConfirm = new Button();
+        buttonWordLengthConfirm.setPrefSize(200,50);
+        buttonWordLengthConfirm.setLayoutX(300);
+        buttonWordLengthConfirm.setLayoutY(300);
+        buttonWordLengthConfirm.setText("Confirm Word Length");
+
+        buttonWordLengthConfirm.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 14));
+
+        root.getChildren().add(buttonWordLengthConfirm);
+
+        buttonWordLengthConfirm.setOnMouseClicked(event -> {
+            for (TextField i: letterRestrictions){
+                restrictionsInput.getChildren().remove(i);
+            }
+
+            letterRestrictions.clear();
+
+            for(int i = 0; i < sliderWordLength.getValue(); i++){
+                letterRestrictions.add(new TextField());
+            }
+
+            textFieldSizeSet(letterRestrictions, acceptableValues);
+
+            for (TextField i: letterRestrictions){
+                restrictionsInput.getChildren().add(i);
+            }
+
+            root.getChildren().add(textSet(new HBox(), new Text(), 380, 15, "Input Your Restrictions"));
+
+        });
+
         root.getChildren().add(restrictionsInput);
-
-        /*
-        TextField textFieldWordLength = new TextField();
-        textFieldWordLength.setPrefSize(50,50);
-        textFieldWordLength.setPadding(new Insets(0,0,0,0));
-        textFieldWordLength.setAlignment(Pos.CENTER);
-
-        textFieldWordLength.lengthProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() > oldValue.intValue()) {
-                if (textFieldWordLength.getText().length() >= 2) {
-                    if((Integer.parseInt(textFieldWordLength.getText()) > 15 || Integer.parseInt(textFieldWordLength.getText()) < 2)){
-                        textFieldWordLength.setText(textFieldWordLength.getText().substring(0, 2));
-                    }
-
-                }
-            }
-        });
-
-        textFieldWordLength.textProperty().addListener((observable, oldValue, newValue) ->{
-            if(!newValue.matches("\\d*")){
-                textFieldWordLength.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
-
-
-        if(Integer.parseInt(textFieldWordLength.getText()) > 15) {
-            textFieldWordLength.setText("15");
-        }
-
-        if(Integer.parseInt(textFieldWordLength.getText()) < 2) {
-            textFieldWordLength.setText("2");
-        }
-
-
-        textFieldWordLength.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-         */
-
-
-
-
-
-
-
-
-
-
 
         gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
-
-        //Updates the X and Y location of the mouse when it is moved
-        root.setOnMouseMoved(event -> {
-            mouseX = event.getSceneX()-10;
-            mouseY = event.getSceneY()-10;
-        });
-
 
         //Setup Animation
         Timeline loop = new Timeline();
