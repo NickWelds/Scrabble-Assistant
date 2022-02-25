@@ -8,9 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -18,13 +16,10 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javafx.util.Duration;
 
@@ -33,7 +28,7 @@ public class GUI extends Application {
 
 
 
-    public void textFieldSizeSet(ArrayList<TextField> allTexts, ArrayList<Character> acceptableValues){
+    public void textFieldSizeSet(ArrayList<TextField> allTexts){
         for (TextField i: allTexts){
             i.setPrefSize(50,50);
 
@@ -68,6 +63,16 @@ public class GUI extends Application {
         hbox.setAlignment(Pos.CENTER);
         hbox.getChildren().add(text);
         return hbox;
+    }
+
+    public void HBoxSettings(HBox hbox, int x, int y){
+        hbox.setPadding(new Insets(0, 12, 0, 12) );
+        hbox.setSpacing(10);
+        hbox.setStyle("-fx-background-colour: #336699; ");
+        hbox.setPrefSize(700,100);
+        hbox.setLayoutX(x);
+        hbox.setLayoutY(y);
+        hbox.setAlignment(Pos.CENTER);
     }
 
     //Creates dimension of the window
@@ -119,7 +124,7 @@ public class GUI extends Application {
             allLetters.add(new TextField());
         }
 
-        textFieldSizeSet(allLetters, acceptableValues);
+        textFieldSizeSet(allLetters);
 
         letterInput.setPrefSize(600,100);
         letterInput.setLayoutX(100);
@@ -166,21 +171,21 @@ public class GUI extends Application {
 
         //TODO Letter Restrictions
 
-        HBox restrictionsInput = new HBox ();
-        restrictionsInput.setPadding(new Insets(0, 12, 0, 12) );
-        restrictionsInput.setSpacing(10);
-        restrictionsInput.setStyle("-fx-background-colour: #336699; ");
+        HBox hBoxRestrictionsInput = new HBox ();
+        HBoxSettings(hBoxRestrictionsInput, 50, 400);
+
 
         ArrayList<TextField> letterRestrictions = new ArrayList<>();
 
-        restrictionsInput.setPrefSize(700,100);
-        restrictionsInput.setLayoutX(50);
-        restrictionsInput.setLayoutY(400);
-        restrictionsInput.setAlignment(Pos.CENTER);
 
+        //TODO Letter Multiplier
+
+        HBox hBoxPointMultiplier = new HBox();
+        HBoxSettings(hBoxPointMultiplier, 50, 450);
+
+        ArrayList<ComboBox> pointMultipliers = new ArrayList<>();
 
         //TODO Commit button for restrictions
-
         Button buttonWordLengthConfirm = new Button();
         buttonWordLengthConfirm.setPrefSize(200,50);
         buttonWordLengthConfirm.setLayoutX(300);
@@ -193,7 +198,7 @@ public class GUI extends Application {
 
         buttonWordLengthConfirm.setOnMouseClicked(event -> {
             for (TextField i: letterRestrictions){
-                restrictionsInput.getChildren().remove(i);
+                hBoxRestrictionsInput.getChildren().remove(i);
             }
 
             letterRestrictions.clear();
@@ -202,17 +207,42 @@ public class GUI extends Application {
                 letterRestrictions.add(new TextField());
             }
 
-            textFieldSizeSet(letterRestrictions, acceptableValues);
+            textFieldSizeSet(letterRestrictions);
 
             for (TextField i: letterRestrictions){
-                restrictionsInput.getChildren().add(i);
+                hBoxRestrictionsInput.getChildren().add(i);
             }
 
             root.getChildren().add(textSet(new HBox(), new Text(), 380, 15, "Input Your Restrictions"));
 
+
+            for (ComboBox i: pointMultipliers){
+                hBoxPointMultiplier.getChildren().remove(i);
+            }
+
+            pointMultipliers.clear();
+
+            for(int i = 0; i < sliderWordLength.getValue(); i++){
+                pointMultipliers.add(new ComboBox());
+            }
+
+            for (ComboBox i: pointMultipliers){
+                i.getItems().addAll("None", "DP", "TP");
+                i.setPrefSize(50, 20);
+                i.setPadding(new Insets(0,0,0,0));
+                i.setPromptText("None");
+
+            }
+
+            for (ComboBox i: pointMultipliers){
+                hBoxPointMultiplier.getChildren().add(i);
+            }
         });
 
-        root.getChildren().add(restrictionsInput);
+        root.getChildren().add(hBoxRestrictionsInput);
+        root.getChildren().add(hBoxPointMultiplier);
+
+
 
         gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
