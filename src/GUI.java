@@ -105,11 +105,6 @@ public class GUI extends Application {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        ArrayList<Character> acceptableValues = new ArrayList<>();
-        for (int i = 65; i <= 26 + 65; i ++){
-            acceptableValues.add((char)i);
-        }
-
         root.getChildren().add(textSet(new HBox(), new Text(), 80, 15, "Input Your Scrabble Letters"));
 
         //TODO Input Letters
@@ -177,13 +172,12 @@ public class GUI extends Application {
 
         ArrayList<TextField> letterRestrictions = new ArrayList<>();
 
+        //TODO Point Multiplier Button HBox
 
-        //TODO Letter Multiplier
+        HBox hBoxMultiplierButton = new HBox ();
+        HBoxSettings(hBoxMultiplierButton, 50, 450);
 
-        HBox hBoxPointMultiplier = new HBox();
-        HBoxSettings(hBoxPointMultiplier, 50, 450);
-
-        ArrayList<ComboBox> pointMultipliers = new ArrayList<>();
+        ArrayList<Button> multiplierButtons = new ArrayList<>();
 
         //TODO Commit button for restrictions
         Button buttonWordLengthConfirm = new Button();
@@ -194,13 +188,10 @@ public class GUI extends Application {
 
         buttonWordLengthConfirm.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 14));
 
-        root.getChildren().add(buttonWordLengthConfirm);
 
         buttonWordLengthConfirm.setOnMouseClicked(event -> {
-            for (TextField i: letterRestrictions){
-                hBoxRestrictionsInput.getChildren().remove(i);
-            }
 
+            hBoxRestrictionsInput.getChildren().clear();
             letterRestrictions.clear();
 
             for(int i = 0; i < sliderWordLength.getValue(); i++){
@@ -216,33 +207,41 @@ public class GUI extends Application {
             root.getChildren().add(textSet(new HBox(), new Text(), 380, 15, "Input Your Restrictions"));
 
 
-            for (ComboBox i: pointMultipliers){
-                hBoxPointMultiplier.getChildren().remove(i);
-            }
-
-            pointMultipliers.clear();
+            hBoxMultiplierButton.getChildren().clear();
+            multiplierButtons.clear();
 
             for(int i = 0; i < sliderWordLength.getValue(); i++){
-                pointMultipliers.add(new ComboBox());
+                multiplierButtons.add(new Button());
             }
 
-            for (ComboBox i: pointMultipliers){
-                i.getItems().addAll("None", "DP", "TP");
+            for(Button i: multiplierButtons){
                 i.setPrefSize(50, 20);
-                i.setPadding(new Insets(0,0,0,0));
-                i.setPromptText("None");
-
+                i.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 14));
+                i.setText("-");
+                i.setPadding(new Insets(5, 0, 5, 0));
+                i.setAlignment(Pos.CENTER);
             }
 
-            for (ComboBox i: pointMultipliers){
-                hBoxPointMultiplier.getChildren().add(i);
+            for (Button i : multiplierButtons) {
+                i.setOnMouseClicked(event1 -> {
+                    if (i.getText().equals("-")) {
+                        i.setText("2X");
+                    } else if (i.getText().equals("2X")) {
+                        i.setText("3X");
+                    } else if (i.getText().equals("3X")) {
+                        i.setText("-");
+                    }
+                });
+            }
+
+            for (Button i: multiplierButtons){
+                hBoxMultiplierButton.getChildren().add(i);
             }
         });
 
+        root.getChildren().add(buttonWordLengthConfirm);
         root.getChildren().add(hBoxRestrictionsInput);
-        root.getChildren().add(hBoxPointMultiplier);
-
-
+        root.getChildren().add(hBoxMultiplierButton);
 
         gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
