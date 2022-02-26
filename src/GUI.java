@@ -27,9 +27,8 @@ import javafx.util.Duration;
 public class GUI extends Application {
 
 
-
-    public void textFieldSizeSet(ArrayList<TextField> allTexts){
-        for (TextField i: allTexts){
+    public void textFieldSettings(ArrayList<TextField> textFields){
+        for (TextField i: textFields){
             i.setPrefSize(50,50);
 
             i.setFont(Font.loadFont("file:scrabble-font" + File.separator + "Scramble-KVBe.ttf", 30));
@@ -54,6 +53,21 @@ public class GUI extends Application {
         }
     }
 
+    public void setTextFields(ArrayList<TextField> textFields, HBox hbox, int size){
+        hbox.getChildren().clear();
+        textFields.clear();
+
+        for(int i = 0; i < size; i++){
+            textFields.add(new TextField());
+        }
+
+        textFieldSettings(textFields);
+
+        for (TextField i: textFields){
+            hbox.getChildren().add(i);
+        }
+    }
+
     public HBox textSet(HBox hbox, Text text, int y, int size, String textDisplay){
         hbox.setPrefSize(800, 50);
         hbox.setLayoutY(y);
@@ -65,31 +79,29 @@ public class GUI extends Application {
         return hbox;
     }
 
-    public void HBoxSettings(HBox hbox, int x, int y){
+    public void HBoxSettings(HBox hbox, int x, int y, int prefHeight){
         hbox.setPadding(new Insets(0, 12, 0, 12) );
         hbox.setSpacing(10);
         hbox.setStyle("-fx-background-colour: #336699; ");
-        hbox.setPrefSize(700,100);
+        hbox.setPrefSize(700, prefHeight);
         hbox.setLayoutX(x);
         hbox.setLayoutY(y);
         hbox.setAlignment(Pos.CENTER);
     }
 
+    public void buttonSettings(Button button, int x, int y, String text){
+        button.setPrefSize(200,50);
+        button.setLayoutX(x);
+        button.setLayoutY(y);
+        button.setText(text);
+        button.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 14));
+        button.setAlignment(Pos.CENTER);
+        button.setPadding(new Insets(5, 0, 5, 0));
+    }
+
     //Creates dimension of the window
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
-
-    //Initial Mouse X and Y position
-    public double mouseX = (double)WIDTH/2;
-    public double mouseY = (double)HEIGHT/2;
-
-    //Colour of the firework
-    protected static double redValue = 1;
-    protected static double blueValue = 1;
-    protected static double greenValue = 1;
-
-    //Type of firework being launched
-    protected static int fireworkType = 0;
 
     public int numOfRestrictions = 7;
 
@@ -108,41 +120,25 @@ public class GUI extends Application {
         root.getChildren().add(textSet(new HBox(), new Text(), 80, 15, "Input Your Scrabble Letters"));
 
         //TODO Input Letters
-        HBox letterInput = new HBox ();
-        letterInput.setPadding(new Insets(0, 12, 0, 12) );
-        letterInput.setSpacing(10);
-        letterInput.setStyle("-fx-background-colour: #336699; ");
+        HBox hBoxLetterInput = new HBox ();
+        HBoxSettings(hBoxLetterInput, 50, 125, 50);
 
         ArrayList<TextField> allLetters = new ArrayList<>();
 
-        for(int i = 0; i < 8; i++){
-            allLetters.add(new TextField());
-        }
+        setTextFields(allLetters, hBoxLetterInput, 8);
 
-        textFieldSizeSet(allLetters);
 
-        letterInput.setPrefSize(600,100);
-        letterInput.setLayoutX(100);
-        letterInput.setLayoutY(100);
-        letterInput.setAlignment(Pos.CENTER);
-        for (TextField i: allLetters){
-            letterInput.getChildren().add(i);
-        }
-
-        root.getChildren().add(letterInput);
+        root.getChildren().add(hBoxLetterInput);
 
         //TODO Input Length of word
 
-        HBox lengthInput = new HBox ();
-        lengthInput.setPadding(new Insets(0, 12, 0, 12) );
-        lengthInput.setSpacing(10);
-        lengthInput.setStyle("-fx-background-colour: #336699; ");
+        HBox hBoxLengthInput = new HBox ();
 
-        textSet(lengthInput, new Text(), 0, 20, "Input the Length of Desired Word:");
+        textSet(hBoxLengthInput, new Text(), 0, 20, "Input the Length of Desired Word:");
+
+        HBoxSettings(hBoxLengthInput, 50, 200, 100);
 
         Slider sliderWordLength = new Slider(2,15, 8);
-
-        sliderWordLength.setStyle("-fx-tick-label-fill: #ffffff;");
 
         sliderWordLength.setShowTickLabels(true);
         sliderWordLength.setShowTickMarks(true);
@@ -154,20 +150,17 @@ public class GUI extends Application {
 
         sliderWordLength.setPrefSize(300,50);
 
-        lengthInput.setPrefSize(700,100);
-        lengthInput.setLayoutX(50);
-        lengthInput.setLayoutY(200);
-        lengthInput.setAlignment(Pos.CENTER);
-        lengthInput.getChildren().add(sliderWordLength);
 
-        root.getChildren().add(lengthInput);
+        hBoxLengthInput.getChildren().add(sliderWordLength);
+
+        root.getChildren().add(hBoxLengthInput);
 
 
 
         //TODO Letter Restrictions
 
         HBox hBoxRestrictionsInput = new HBox ();
-        HBoxSettings(hBoxRestrictionsInput, 50, 400);
+        HBoxSettings(hBoxRestrictionsInput, 50, 425, 50);
 
 
         ArrayList<TextField> letterRestrictions = new ArrayList<>();
@@ -175,34 +168,18 @@ public class GUI extends Application {
         //TODO Point Multiplier Button HBox
 
         HBox hBoxMultiplierButton = new HBox ();
-        HBoxSettings(hBoxMultiplierButton, 50, 450);
+        HBoxSettings(hBoxMultiplierButton, 50, 485, 20);
 
         ArrayList<Button> multiplierButtons = new ArrayList<>();
 
         //TODO Commit button for restrictions
         Button buttonWordLengthConfirm = new Button();
-        buttonWordLengthConfirm.setPrefSize(200,50);
-        buttonWordLengthConfirm.setLayoutX(300);
-        buttonWordLengthConfirm.setLayoutY(300);
-        buttonWordLengthConfirm.setText("Confirm Word Length");
-
-        buttonWordLengthConfirm.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 14));
-
+        buttonSettings(buttonWordLengthConfirm, 300, 300, "Confirm Word Length");
 
         buttonWordLengthConfirm.setOnMouseClicked(event -> {
 
-            hBoxRestrictionsInput.getChildren().clear();
-            letterRestrictions.clear();
+            setTextFields(letterRestrictions, hBoxRestrictionsInput, (int)sliderWordLength.getValue());
 
-            for(int i = 0; i < sliderWordLength.getValue(); i++){
-                letterRestrictions.add(new TextField());
-            }
-
-            textFieldSizeSet(letterRestrictions);
-
-            for (TextField i: letterRestrictions){
-                hBoxRestrictionsInput.getChildren().add(i);
-            }
 
             root.getChildren().add(textSet(new HBox(), new Text(), 380, 15, "Input Your Restrictions"));
 
@@ -222,6 +199,10 @@ public class GUI extends Application {
                 i.setAlignment(Pos.CENTER);
             }
 
+            for (Button i: multiplierButtons){
+                hBoxMultiplierButton.getChildren().add(i);
+            }
+
             for (Button i : multiplierButtons) {
                 i.setOnMouseClicked(event1 -> {
                     if (i.getText().equals("-")) {
@@ -234,14 +215,24 @@ public class GUI extends Application {
                 });
             }
 
-            for (Button i: multiplierButtons){
-                hBoxMultiplierButton.getChildren().add(i);
-            }
+
+
+            Button buttonConfirmRestrictions = new Button();
+            buttonSettings(buttonConfirmRestrictions, 300, 550, "Confirm Restrictions");
+            root.getChildren().add(buttonConfirmRestrictions);
+
         });
 
         root.getChildren().add(buttonWordLengthConfirm);
         root.getChildren().add(hBoxRestrictionsInput);
         root.getChildren().add(hBoxMultiplierButton);
+
+
+
+
+
+
+
 
         gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
