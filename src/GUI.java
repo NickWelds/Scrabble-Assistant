@@ -100,6 +100,21 @@ public class GUI extends Application {
         button.setPadding(new Insets(5, 0, 5, 0));
     }
 
+    public void sliderSettings(Slider slider){
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setSnapToTicks(true);
+        slider.setMajorTickUnit(1);
+        slider.setMinorTickCount(0);
+        slider.setBlockIncrement(1);
+    }
+
+    public void setTextFieldUnEditable(ArrayList<TextField> textFields){
+        for(TextField i: textFields){
+            i.setEditable(false);
+        }
+    }
+
     //Creates dimension of the window
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
@@ -141,13 +156,7 @@ public class GUI extends Application {
 
         Slider sliderWordLength = new Slider(2,15, 8);
 
-        sliderWordLength.setShowTickLabels(true);
-        sliderWordLength.setShowTickMarks(true);
-        sliderWordLength.setSnapToTicks(true);
-
-        sliderWordLength.setMajorTickUnit(1);
-        sliderWordLength.setMinorTickCount(0);
-        sliderWordLength.setBlockIncrement(1);
+        sliderSettings(sliderWordLength);
 
         sliderWordLength.setPrefSize(300,50);
 
@@ -184,18 +193,41 @@ public class GUI extends Application {
 
         ArrayList<TextField> results = new ArrayList<>();
 
+        //TODO Slider Result Rank
+
+        HBox hBoxResultRankInput = new HBox ();
+
+        textSet(hBoxResultRankInput, new Text(), 0, 20, "Input Desired Word Rank:");
+
+        HBoxSettings(hBoxResultRankInput, 50, 700, 50);
+
+        Slider sliderResultsRank = new Slider(1,10, 1);
+
+        sliderSettings(sliderResultsRank);
+
+        sliderResultsRank.setPrefSize(300,50);
+
+        hBoxResultRankInput.getChildren().add(sliderResultsRank);
+
+        ArrayList<String> stringResults = new ArrayList<>();
+
+
         //TODO Commit button for restrictions
         //Button buttonWordLengthConfirm = new Button();
         //buttonSettings(buttonWordLengthConfirm, 300, 300, "Confirm Word Length");
 
         sliderWordLength.valueProperty().addListener((observable, oldValue, newValue) ->{
-
             if (!Objects.equals(newValue.intValue(), oldValue.intValue())) {
+
+                setTextFieldUnEditable(allLetters);
+
                 hBoxResults.getChildren().clear();
                 results.clear();
                 root.getChildren().remove(hBoxRestrictionsText);
 
                 setTextFields(letterRestrictions, hBoxRestrictionsInput, (int)sliderWordLength.getValue());
+
+
 
                 root.getChildren().add(hBoxRestrictionsText);
 
@@ -236,7 +268,40 @@ public class GUI extends Application {
                 root.getChildren().add(buttonConfirmRestrictions);
 
                 buttonConfirmRestrictions.setOnMouseClicked(event1 -> {
+                    stringResults.add("test");
+                    stringResults.add("high");
+                    stringResults.add("cool");
+                    stringResults.add("cone");
+                    stringResults.add("zaps");
+                    stringResults.add("taps");
+                    stringResults.add("jump");
+                    stringResults.add("runs");
+                    stringResults.add("rush");
+                    stringResults.add("butt");
+
+                    root.getChildren().remove(hBoxResultRankInput);
+                    root.getChildren().add(hBoxResultRankInput);
+
                     setTextFields(results, hBoxResults, letterRestrictions.size());
+
+                    setTextFieldUnEditable(letterRestrictions);
+                    setTextFieldUnEditable(results);
+
+
+                    for(int i = 0; i < stringResults.get(0).length(); i++){
+                        results.get(i).setText(String.valueOf(stringResults.get(0).charAt(i)));
+                    }
+
+                    sliderResultsRank.valueProperty().addListener((observable1, oldValue1, newValue1) ->{
+                        if (!Objects.equals(newValue1.intValue(), oldValue1.intValue())){
+                            int resultRank = newValue1.intValue()-1;
+
+                            for(int i = 0; i < stringResults.get(resultRank).length(); i++){
+                                results.get(i).setText(String.valueOf(stringResults.get(resultRank).charAt(i)));
+                            }
+                        }
+                    });
+
                 });
             }
         });
@@ -333,7 +398,7 @@ public class GUI extends Application {
         loop.play();
 
         stage.setScene(scene);
-        stage.setTitle("Fireworks");
+        stage.setTitle("Scrabble Assistant");
         stage.show();
     }
 
