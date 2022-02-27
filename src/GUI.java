@@ -107,6 +107,7 @@ public class GUI extends Application {
         slider.setMajorTickUnit(1);
         slider.setMinorTickCount(0);
         slider.setBlockIncrement(1);
+        slider.setPrefSize(300,50);
     }
 
     public void setTextFieldUnEditable(ArrayList<TextField> textFields){
@@ -138,31 +139,18 @@ public class GUI extends Application {
         //TODO Input Letters
         HBox hBoxLetterInput = new HBox ();
         HBoxSettings(hBoxLetterInput, 50, 125, 50);
-
         ArrayList<TextField> allLetters = new ArrayList<>();
-
         setTextFields(allLetters, hBoxLetterInput, 8);
-
-
         root.getChildren().add(hBoxLetterInput);
 
         //TODO Input Length of word
 
         HBox hBoxLengthInput = new HBox ();
-
         textSet(hBoxLengthInput, new Text(), 0, 20, "Input the Length of Desired Word:");
-
         HBoxSettings(hBoxLengthInput, 50, 200, 100);
-
         Slider sliderWordLength = new Slider(2,15, 8);
-
         sliderSettings(sliderWordLength);
-
-        sliderWordLength.setPrefSize(300,50);
-
-
         hBoxLengthInput.getChildren().add(sliderWordLength);
-
         root.getChildren().add(hBoxLengthInput);
 
         //TODO Input Restrictions text HBox
@@ -175,39 +163,23 @@ public class GUI extends Application {
 
         HBox hBoxRestrictionsInput = new HBox ();
         HBoxSettings(hBoxRestrictionsInput, 50, 375, 50);
-
-
         ArrayList<TextField> letterRestrictions = new ArrayList<>();
 
         //TODO Point Multiplier Button HBox
 
         HBox hBoxMultiplierButton = new HBox ();
         HBoxSettings(hBoxMultiplierButton, 50, 435, 20);
-
         ArrayList<Button> multiplierButtons = new ArrayList<>();
 
         //TODO Final Result HBox
 
         HBox hBoxResults = new HBox ();
         HBoxSettings(hBoxResults, 50, 600, 50);
-
         ArrayList<TextField> results = new ArrayList<>();
 
         //TODO Slider Result Rank
 
         HBox hBoxResultRankInput = new HBox ();
-
-        textSet(hBoxResultRankInput, new Text(), 0, 20, "Input Desired Word Rank:");
-
-        HBoxSettings(hBoxResultRankInput, 50, 700, 50);
-
-        Slider sliderResultsRank = new Slider(1,10, 1);
-
-        sliderSettings(sliderResultsRank);
-
-        sliderResultsRank.setPrefSize(300,50);
-
-        hBoxResultRankInput.getChildren().add(sliderResultsRank);
 
         ArrayList<String> stringResults = new ArrayList<>();
 
@@ -268,6 +240,10 @@ public class GUI extends Application {
                 root.getChildren().add(buttonConfirmRestrictions);
 
                 buttonConfirmRestrictions.setOnMouseClicked(event1 -> {
+                    hBoxResultRankInput.getChildren().clear();
+                    stringResults.clear();
+
+
                     stringResults.add("test");
                     stringResults.add("high");
                     stringResults.add("cool");
@@ -278,6 +254,18 @@ public class GUI extends Application {
                     stringResults.add("runs");
                     stringResults.add("rush");
                     stringResults.add("butt");
+
+
+                    textSet(hBoxResultRankInput, new Text(), 0, 20, "Input Desired Word Rank:");
+                    HBoxSettings(hBoxResultRankInput, 50, 700, 50);
+
+                    int maxSliderSize = Math.min(stringResults.size(), 5);
+
+                    Slider sliderResultsRank = new Slider(1,maxSliderSize, 1);
+
+                    sliderSettings(sliderResultsRank);
+
+                    hBoxResultRankInput.getChildren().add(sliderResultsRank);
 
                     root.getChildren().remove(hBoxResultRankInput);
                     root.getChildren().add(hBoxResultRankInput);
@@ -293,7 +281,7 @@ public class GUI extends Application {
                     }
 
                     sliderResultsRank.valueProperty().addListener((observable1, oldValue1, newValue1) ->{
-                        if (!Objects.equals(newValue1.intValue(), oldValue1.intValue())){
+                        if (!Objects.equals(newValue1.intValue(), oldValue1.intValue()) && sliderResultsRank.getMax() > 1){
                             int resultRank = newValue1.intValue()-1;
 
                             for(int i = 0; i < stringResults.get(resultRank).length(); i++){
