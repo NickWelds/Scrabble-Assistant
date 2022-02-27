@@ -20,6 +20,7 @@ import javafx.scene.control.TextField;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javafx.util.Duration;
 
@@ -155,12 +156,16 @@ public class GUI extends Application {
 
         root.getChildren().add(hBoxLengthInput);
 
+        //TODO Input Restrictions text HBox
+
+        HBox hBoxRestrictionsText = new HBox();
+        textSet(hBoxRestrictionsText, new Text(), 330, 15, "Input Your Restrictions");
 
 
         //TODO Letter Restrictions
 
         HBox hBoxRestrictionsInput = new HBox ();
-        HBoxSettings(hBoxRestrictionsInput, 50, 425, 50);
+        HBoxSettings(hBoxRestrictionsInput, 50, 375, 50);
 
 
         ArrayList<TextField> letterRestrictions = new ArrayList<>();
@@ -168,18 +173,81 @@ public class GUI extends Application {
         //TODO Point Multiplier Button HBox
 
         HBox hBoxMultiplierButton = new HBox ();
-        HBoxSettings(hBoxMultiplierButton, 50, 485, 20);
+        HBoxSettings(hBoxMultiplierButton, 50, 435, 20);
 
         ArrayList<Button> multiplierButtons = new ArrayList<>();
 
-        //TODO Commit button for restrictions
-        Button buttonWordLengthConfirm = new Button();
-        buttonSettings(buttonWordLengthConfirm, 300, 300, "Confirm Word Length");
+        //TODO Final Result HBox
 
+        HBox hBoxResults = new HBox ();
+        HBoxSettings(hBoxResults, 50, 600, 50);
+
+        ArrayList<TextField> results = new ArrayList<>();
+
+        //TODO Commit button for restrictions
+        //Button buttonWordLengthConfirm = new Button();
+        //buttonSettings(buttonWordLengthConfirm, 300, 300, "Confirm Word Length");
+
+        sliderWordLength.valueProperty().addListener((observable, oldValue, newValue) ->{
+
+            if (!Objects.equals(newValue.intValue(), oldValue.intValue())) {
+                hBoxResults.getChildren().clear();
+                results.clear();
+                root.getChildren().remove(hBoxRestrictionsText);
+
+                setTextFields(letterRestrictions, hBoxRestrictionsInput, (int)sliderWordLength.getValue());
+
+                root.getChildren().add(hBoxRestrictionsText);
+
+
+                hBoxMultiplierButton.getChildren().clear();
+                multiplierButtons.clear();
+
+                for(int i = 0; i < letterRestrictions.size(); i++){
+                    multiplierButtons.add(new Button());
+                }
+
+                for(Button i: multiplierButtons){
+                    i.setPrefSize(50, 20);
+                    i.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 14));
+                    i.setText("-");
+                    i.setPadding(new Insets(5, 0, 5, 0));
+                    i.setAlignment(Pos.CENTER);
+                }
+
+                for (Button i: multiplierButtons){
+                    hBoxMultiplierButton.getChildren().add(i);
+                }
+
+                for (Button i : multiplierButtons) {
+                    i.setOnMouseClicked(event1 -> {
+                        if (i.getText().equals("-")) {
+                            i.setText("2X");
+                        } else if (i.getText().equals("2X")) {
+                            i.setText("3X");
+                        } else if (i.getText().equals("3X")) {
+                            i.setText("-");
+                        }
+                    });
+                }
+
+                Button buttonConfirmRestrictions = new Button();
+                buttonSettings(buttonConfirmRestrictions, 300, 500, "Confirm Restrictions");
+                root.getChildren().add(buttonConfirmRestrictions);
+
+                buttonConfirmRestrictions.setOnMouseClicked(event1 -> {
+                    setTextFields(results, hBoxResults, letterRestrictions.size());
+                });
+            }
+        });
+
+        /*
         buttonWordLengthConfirm.setOnMouseClicked(event -> {
 
-            setTextFields(letterRestrictions, hBoxRestrictionsInput, (int)sliderWordLength.getValue());
+            hBoxResults.getChildren().clear();
+            results.clear();
 
+            setTextFields(letterRestrictions, hBoxRestrictionsInput, (int)sliderWordLength.getValue());
 
             root.getChildren().add(textSet(new HBox(), new Text(), 380, 15, "Input Your Restrictions"));
 
@@ -215,24 +283,24 @@ public class GUI extends Application {
                 });
             }
 
-
-
             Button buttonConfirmRestrictions = new Button();
             buttonSettings(buttonConfirmRestrictions, 300, 550, "Confirm Restrictions");
             root.getChildren().add(buttonConfirmRestrictions);
 
+            buttonConfirmRestrictions.setOnMouseClicked(event1 -> {
+                setTextFields(results, hBoxResults, letterRestrictions.size());
+            });
+
         });
 
-        root.getChildren().add(buttonWordLengthConfirm);
+         */
+
+
+
+        //root.getChildren().add(buttonWordLengthConfirm);
         root.getChildren().add(hBoxRestrictionsInput);
         root.getChildren().add(hBoxMultiplierButton);
-
-
-
-
-
-
-
+        root.getChildren().add(hBoxResults);
 
         gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
