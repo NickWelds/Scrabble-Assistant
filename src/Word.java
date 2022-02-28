@@ -15,10 +15,10 @@ public class Word {
      * @param inputLetters An array of letters that the user has available.
      * @param restrictions An array of characters that the word must have in those locations. Has the character '\0'
      *                     if blank and can be any character.
-     * @param wordlength The maximum possible length of a word.
+     * @param wordLength The maximum possible length of a word.
      */
-    public void getAllPossibleWords(char[] inputLetters, char[] restrictions, int wordlength){
-        getWordsFromDictionary(wordlength);
+    public void getAllPossibleWords(char[] inputLetters, char[] restrictions, int wordLength){
+        getWordsFromDictionary(wordLength);
         ArrayList<Character> letters = new ArrayList<>();
         for (int i = 0; i < inputLetters.length; i++) {
             letters.add(inputLetters[i]);
@@ -92,12 +92,12 @@ public class Word {
     /**
      * getWordsFromDictionary creates a new dictionary object and populates Word's possibleWordList with
      * every word under a given length, found using the dictionary object's getAllWordsByLength().
-     * @param wordlength The maximum possible length of a word.
+     * @param wordLength The maximum possible length of a word.
      */
 
-    public void getWordsFromDictionary(int wordlength){
+    public void getWordsFromDictionary(int wordLength){
         Dictionary dictionary = new Dictionary();
-        possibleWordList = dictionary.getAllWordsByLength(wordlength);
+        possibleWordList = dictionary.getAllWordsByLength(wordLength);
     }
 
     /**
