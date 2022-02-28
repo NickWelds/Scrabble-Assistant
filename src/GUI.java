@@ -28,7 +28,7 @@ import javafx.util.Duration;
 public class GUI extends Application {
 
 
-    public void textFieldSettings(ArrayList<TextField> textFields){
+    protected void textFieldSettings(ArrayList<TextField> textFields){
         for (TextField i: textFields){
             i.setPrefSize(50,50);
 
@@ -57,7 +57,7 @@ public class GUI extends Application {
         }
     }
 
-    public void setTextFields(ArrayList<TextField> textFields, HBox hbox, int size){
+    protected void setTextFields(ArrayList<TextField> textFields, HBox hbox, int size){
         hbox.getChildren().clear();
         textFields.clear();
 
@@ -128,6 +128,10 @@ public class GUI extends Application {
         return count;
     }
 
+    public void removeAddHBox (Group root, HBox hBox){
+        root.getChildren().remove(hBox);
+        root.getChildren().add(hBox);
+    }
 
 
     //Creates dimension of the window
@@ -202,10 +206,6 @@ public class GUI extends Application {
         //TODO Commit Restriction button
         Button buttonConfirmRestrictions = new Button("Find Words");
         buttonSettings(buttonConfirmRestrictions, 300, 500, 200, 50);
-
-        //TODO Commit button for restrictions
-        //Button buttonWordLengthConfirm = new Button();
-        //buttonSettings(buttonWordLengthConfirm, 300, 300, "Confirm Word Length");
 
         //TODO Invalid Amount of Restrictions HBox
         HBox hBoxInvalidRestrictions  = textSet(new HBox(), new Text("Invalid Amount of Restrictions"), 625,25);
@@ -301,10 +301,6 @@ public class GUI extends Application {
                             ArrayList<String> other = score.sort_words(multiplier_list, characters, restrictions, w_length);
                             stringResults.addAll(other);
 
-                            for (String i: stringResults){
-                                System.out.println(i);
-                            }
-
                             textSet(hBoxResultRankInput, new Text("Input Desired Word Rank:"), 0, 20);
                             HBoxSettings(hBoxResultRankInput, 50, 700, 50);
 
@@ -317,11 +313,9 @@ public class GUI extends Application {
 
                                 hBoxResultRankInput.getChildren().add(sliderResultsRank);
 
-                                root.getChildren().remove(hBoxResultRankInput);
-                                root.getChildren().add(hBoxResultRankInput);
+                                removeAddHBox(root, hBoxResultRankInput);
 
-                                setTextFields(results, hBoxResults, letterRestrictions.size());
-
+                                setTextFields(results, hBoxResults, stringResults.get(0).length());
                                 setTextFieldEditState(letterRestrictions, false);
                                 setTextFieldEditState(results, false);
 
@@ -331,7 +325,16 @@ public class GUI extends Application {
 
                                 sliderResultsRank.valueProperty().addListener((observable1, oldValue1, newValue1) -> {
                                     if (!Objects.equals(newValue1.intValue(), oldValue1.intValue()) && sliderResultsRank.getMax() > 1) {
+
                                         int resultRank = newValue1.intValue() - 1;
+
+                                        setTextFields(results, hBoxResults, stringResults.get(resultRank).length());
+                                        setTextFieldEditState(letterRestrictions, false);
+                                        setTextFieldEditState(results, false);
+
+                                        for(TextField i: results){
+                                            i.setText("");
+                                        }
 
                                         for (int i = 0; i < stringResults.get(resultRank).length(); i++) {
                                             results.get(i).setText(String.valueOf(stringResults.get(resultRank).charAt(i)));
@@ -339,22 +342,15 @@ public class GUI extends Application {
                                     }
                                 });
                             } else {
-                                root.getChildren().remove(hBoxInvalidRestrictions);
-                                root.getChildren().add(hBoxInvalidRestrictions);
+                                removeAddHBox(root, hBoxInvalidRestrictions);
                             }
-
                         } else {
-                            root.getChildren().remove(hBoxInvalidRestrictions);
-                            root.getChildren().add(hBoxInvalidRestrictions);
+                            removeAddHBox(root, hBoxInvalidRestrictions);
                         }
-
                     });
                 } else {
-                    root.getChildren().remove(hBoxInvalidLetters);
-                    root.getChildren().add(hBoxInvalidLetters);
+                    removeAddHBox(root, hBoxInvalidLetters);
                 }
-
-
             }
         });
 
@@ -388,67 +384,11 @@ public class GUI extends Application {
             multiplierButtons.clear();
 
             root.getChildren().remove(hBoxInvalidRestrictions);
-
             root.getChildren().remove(hBoxInvalidLetters);
 
             setTextFieldEditState(allLetters, true);
 
         });
-
-        /*
-        buttonWordLengthConfirm.setOnMouseClicked(event -> {
-
-            hBoxResults.getChildren().clear();
-            results.clear();
-
-            setTextFields(letterRestrictions, hBoxRestrictionsInput, (int)sliderWordLength.getValue());
-
-            root.getChildren().add(textSet(new HBox(), new Text(), 380, 15, "Input Your Restrictions"));
-
-
-            hBoxMultiplierButton.getChildren().clear();
-            multiplierButtons.clear();
-
-            for(int i = 0; i < sliderWordLength.getValue(); i++){
-                multiplierButtons.add(new Button());
-            }
-
-            for(Button i: multiplierButtons){
-                i.setPrefSize(50, 20);
-                i.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 14));
-                i.setText("-");
-                i.setPadding(new Insets(5, 0, 5, 0));
-                i.setAlignment(Pos.CENTER);
-            }
-
-            for (Button i: multiplierButtons){
-                hBoxMultiplierButton.getChildren().add(i);
-            }
-
-            for (Button i : multiplierButtons) {
-                i.setOnMouseClicked(event1 -> {
-                    if (i.getText().equals("-")) {
-                        i.setText("2X");
-                    } else if (i.getText().equals("2X")) {
-                        i.setText("3X");
-                    } else if (i.getText().equals("3X")) {
-                        i.setText("-");
-                    }
-                });
-            }
-
-            Button buttonConfirmRestrictions = new Button();
-            buttonSettings(buttonConfirmRestrictions, 300, 550, "Confirm Restrictions");
-            root.getChildren().add(buttonConfirmRestrictions);
-
-            buttonConfirmRestrictions.setOnMouseClicked(event1 -> {
-                setTextFields(results, hBoxResults, letterRestrictions.size());
-            });
-
-        });
-        root.getChildren().add(buttonWordLengthConfirm);
-         */
-
 
         gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
         gc.fillRect(0, 0, WIDTH, HEIGHT);

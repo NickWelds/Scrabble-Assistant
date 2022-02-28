@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Score {
 
     //initializes variables
-    public int list_length = 10;
+    public int list_length = 5;
     public int word_length;
     public int score;
     public int multiplier;
