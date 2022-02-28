@@ -109,14 +109,14 @@ public class Score {
         //calculate the possible word scores
         calculate_scores(multiplier_list, characters, restrictions, w_length);
 
-        /*
+
         //Sets best word array to blank and scores to 0
         for (int i = 0; i < list_length; i++){
-            best_words[i][0] = "BLANK";
+            best_words[i][0] = "THISISTOTALLYBLANKBRO";
             best_words[i][1] = "0";
         }
 
-         */
+
 
         //goes through all possible words
         for (int i = 0; i < scores.size(); i++){
@@ -143,14 +143,17 @@ public class Score {
 
         }
 
-
+        //creates final arraylist of best words without scores
         ArrayList<String> final_word_list = new ArrayList<>();
 
+        //fills final arraylist of best words without scores
         for (int i = 0; i < list_length; i++){
-            final_word_list.add(best_words[i][0]);
+            if (!best_words[i][0].equals("THISISTOTALLYBLANKBRO")){
+                final_word_list.add(best_words[i][0]);
+            }
         }
 
-
+        //returns final arraylist
         return final_word_list;
     }
 }
