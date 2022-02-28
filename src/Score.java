@@ -9,7 +9,7 @@ public class Score {
 
     //initializes variables
     public int list_length = 10;
-    public int word_length = 5;
+    public int word_length;
     public int score;
     public int multiplier;
     public boolean done = false;
@@ -109,11 +109,14 @@ public class Score {
         //calculate the possible word scores
         calculate_scores(multiplier_list, characters, restrictions, w_length);
 
+        /*
         //Sets best word array to blank and scores to 0
         for (int i = 0; i < list_length; i++){
             best_words[i][0] = "BLANK";
             best_words[i][1] = "0";
         }
+
+         */
 
         //goes through all possible words
         for (int i = 0; i < scores.size(); i++){
