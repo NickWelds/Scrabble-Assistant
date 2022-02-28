@@ -128,6 +128,8 @@ public class GUI extends Application {
         return count;
     }
 
+    Score score = new Score();
+
     //Creates dimension of the window
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
@@ -198,7 +200,7 @@ public class GUI extends Application {
         ArrayList<String> stringResults = new ArrayList<>();
 
         //TODO Commit Restriction button
-        Button buttonConfirmRestrictions = new Button("Confirm Restrictions");
+        Button buttonConfirmRestrictions = new Button("Find Words");
         buttonSettings(buttonConfirmRestrictions, 300, 500, 200, 50);
 
         //TODO Commit button for restrictions
@@ -265,6 +267,7 @@ public class GUI extends Application {
                             root.getChildren().remove(hBoxInvalidRestrictions);
                             hBoxResultRankInput.getChildren().clear();
                             stringResults.clear();
+
 
 
                             stringResults.add("test");
