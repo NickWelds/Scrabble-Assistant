@@ -128,7 +128,7 @@ public class GUI extends Application {
         return count;
     }
 
-    Score score = new Score();
+
 
     //Creates dimension of the window
     public static final int WIDTH = 800;
@@ -268,55 +268,82 @@ public class GUI extends Application {
                             hBoxResultRankInput.getChildren().clear();
                             stringResults.clear();
 
+                            Score score = new Score();
+
+                            int[] multiplier_list = new int[letterRestrictions.size()];
+                            char[] characters = new char[allLetters.size()];
+                            char[] restrictions = new char[letterRestrictions.size()];
+                            int w_length = letterRestrictions.size();
 
 
-                            stringResults.add("test");
-                            stringResults.add("high");
-                            stringResults.add("cool");
-                            stringResults.add("cone");
-                            stringResults.add("zaps");
-                            stringResults.add("taps");
-                            stringResults.add("jump");
-                            stringResults.add("runs");
-                            stringResults.add("rush");
-                            stringResults.add("butt");
+                            for(int i = 0; i < letterRestrictions.size(); i++){
+                                if (multiplierButtons.get(i).getText().equals("-")) {
+                                    multiplier_list[i] = 1;
+                                } else if (multiplierButtons.get(i).getText().equals("2X")) {
+                                    multiplier_list[i] = 2;
+                                } else if (multiplierButtons.get(i).getText().equals("3X")) {
+                                    multiplier_list[i] = 3;
+                                }
+                            }
 
+                            for(int i = 0; i < allLetters.size(); i++){
+                                characters[i] = allLetters.get(i).getText().charAt(0);
+                            }
+
+                            for(int i = 0; i < letterRestrictions.size(); i++){
+                                if (letterRestrictions.get(i).getText().length() == 0){
+                                    restrictions[i] = '\0';
+                                } else {
+                                    restrictions[i] = letterRestrictions.get(i).getText().charAt(0);
+                                }
+                            }
+
+                            ArrayList<String> other = score.sort_words(multiplier_list, characters, restrictions, w_length);
+                            stringResults.addAll(other);
+
+                            for (String i: stringResults){
+                                System.out.println(i);
+                            }
 
                             textSet(hBoxResultRankInput, new Text("Input Desired Word Rank:"), 0, 20);
                             HBoxSettings(hBoxResultRankInput, 50, 700, 50);
 
-                            int maxSliderSize = Math.min(stringResults.size(), 5);
+                            if(stringResults.size() != 0){
+                                int maxSliderSize = Math.min(stringResults.size(), 5);
 
-                            Slider sliderResultsRank = new Slider(1, maxSliderSize, 1);
+                                Slider sliderResultsRank = new Slider(1, maxSliderSize, 1);
 
-                            sliderSettings(sliderResultsRank);
+                                sliderSettings(sliderResultsRank);
 
-                            hBoxResultRankInput.getChildren().add(sliderResultsRank);
+                                hBoxResultRankInput.getChildren().add(sliderResultsRank);
 
-                            root.getChildren().remove(hBoxResultRankInput);
-                            root.getChildren().add(hBoxResultRankInput);
+                                root.getChildren().remove(hBoxResultRankInput);
+                                root.getChildren().add(hBoxResultRankInput);
 
-                            setTextFields(results, hBoxResults, letterRestrictions.size());
+                                setTextFields(results, hBoxResults, letterRestrictions.size());
 
-                            setTextFieldEditState(letterRestrictions, false);
-                            setTextFieldEditState(results, false);
+                                setTextFieldEditState(letterRestrictions, false);
+                                setTextFieldEditState(results, false);
 
+                                for (int i = 0; i < stringResults.get(0).length(); i++) {
+                                    results.get(i).setText(String.valueOf(stringResults.get(0).charAt(i)));
+                                }
 
-                            for (int i = 0; i < stringResults.get(0).length(); i++) {
-                                results.get(i).setText(String.valueOf(stringResults.get(0).charAt(i)));
+                                sliderResultsRank.valueProperty().addListener((observable1, oldValue1, newValue1) -> {
+                                    if (!Objects.equals(newValue1.intValue(), oldValue1.intValue()) && sliderResultsRank.getMax() > 1) {
+                                        int resultRank = newValue1.intValue() - 1;
+
+                                        for (int i = 0; i < stringResults.get(resultRank).length(); i++) {
+                                            results.get(i).setText(String.valueOf(stringResults.get(resultRank).charAt(i)));
+                                        }
+                                    }
+                                });
+                            } else {
+                                root.getChildren().remove(hBoxInvalidRestrictions);
+                                root.getChildren().add(hBoxInvalidRestrictions);
                             }
 
-                            sliderResultsRank.valueProperty().addListener((observable1, oldValue1, newValue1) -> {
-                                if (!Objects.equals(newValue1.intValue(), oldValue1.intValue()) && sliderResultsRank.getMax() > 1) {
-                                    int resultRank = newValue1.intValue() - 1;
-
-                                    for (int i = 0; i < stringResults.get(resultRank).length(); i++) {
-                                        results.get(i).setText(String.valueOf(stringResults.get(resultRank).charAt(i)));
-                                    }
-                                }
-                            });
                         } else {
-
                             root.getChildren().remove(hBoxInvalidRestrictions);
                             root.getChildren().add(hBoxInvalidRestrictions);
                         }
@@ -461,5 +488,4 @@ public class GUI extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }
