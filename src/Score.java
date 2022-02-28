@@ -104,7 +104,7 @@ public class Score {
      * into a 2-d array that is the specified length, and prints the top words along
      * with their scores.
      */
-    public void sort_words(int[] multiplier_list, char[] characters, char[] restrictions, int w_length){
+    public ArrayList<String> sort_words(int[] multiplier_list, char[] characters, char[] restrictions, int w_length){
 
         //calculate the possible word scores
         calculate_scores(multiplier_list, characters, restrictions, w_length);
@@ -140,10 +140,14 @@ public class Score {
 
         }
 
-        //print best list
-        System.out.println();
+
+        ArrayList<String> final_word_list = new ArrayList<>();
+
         for (int i = 0; i < list_length; i++){
-            System.out.println((i+1) + ". " + best_words[i][0] + ", Score: " + best_words[i][1]);
+            final_word_list.add(best_words[i][0]);
         }
+
+
+        return final_word_list;
     }
 }
