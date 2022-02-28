@@ -11,14 +11,23 @@ public class Word {
 
     /**
      * getAllPossibleWords gives an Arraylist of every word that meets the letter restricts and can be made up from the users letters.
-     * @param letters An array of letters that the user has available.
+     * It adds the restriction letters onto the letters for the purpose of finding words where the restriction letters are not in the letters.
+     * @param inputLetters An array of letters that the user has available.
      * @param restrictions An array of characters that the word must have in those locations. Has the character '\0'
      *                     if blank and can be any character.
      * @param wordlength The maximum possible length of a word.
-     * @return possibleWordList, an arraylist of every word that fits the criteria.
      */
-    public ArrayList<String> getAllPossibleWords(char[] letters, char[] restrictions, int wordlength){
+    public void getAllPossibleWords(char[] inputLetters, char[] restrictions, int wordlength){
         getWordsFromDictionary(wordlength);
+        ArrayList<Character> letters = new ArrayList<>();
+        for (int i = 0; i < inputLetters.length; i++) {
+            letters.add(inputLetters[i]);
+        }
+        for (int i = 0; i < restrictions.length; i++) {
+            if (restrictions[i] != '\0') {
+                letters.add(restrictions[i]);
+            }
+        }
         int iterator = 0;
         while(iterator < possibleWordList.size()) {
             if (!overallValidityCheck(letters, possibleWordList.get(iterator)) || !restrictionCheck(restrictions, possibleWordList.get(iterator))) {
@@ -27,21 +36,20 @@ public class Word {
             }
             iterator++;
         }
-        return possibleWordList;
     }
 
     /**
      * overallValidityCheck sees if a given word can be created using the letters that the user has.
-     * @param letters An array of the letters the user has available to use.
+     * @param letters An arraylist of the letters the user has available to use, includes restriction characters.
      * @param testWord The word that is being checked against the letters.
      * @return true if the testWord can be made from the letters.
      *         false if the testWord cannot be made from the letters.
      */
 
-    public boolean overallValidityCheck(char[] letters, String testWord) {
+    public boolean overallValidityCheck(ArrayList<Character> letters, String testWord) {
         ArrayList<Character> tempLetters = new ArrayList<>();
-        for(int i = 0; i < letters.length; i++) {
-            tempLetters.add(Character.toUpperCase(letters[i]));
+        for(int i = 0; i < letters.size(); i++) {
+            tempLetters.add(Character.toUpperCase(letters.get(i)));
         }
         for (int i = 0; i < testWord.length(); i++) {
             char testLetter = testWord.charAt(i);
@@ -90,5 +98,12 @@ public class Word {
     public void getWordsFromDictionary(int wordlength){
         Dictionary dictionary = new Dictionary();
         possibleWordList = dictionary.getAllWordsByLength(wordlength);
+    }
+
+    /**
+     * getPossibleWordList() returns the wordlist containing the words that are possible to be made.
+     */
+    public ArrayList<String> getPossibleWordList() {
+        return possibleWordList;
     }
 }

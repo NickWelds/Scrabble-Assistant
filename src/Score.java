@@ -36,19 +36,19 @@ public class Score {
         word.getAllPossibleWords(characters, restrictions, word_length);
 
         //goes through all words
-        for (int index = 0; index < word.possibleWordList.size(); index++){
+        for (int index = 0; index < word.getPossibleWordList().size(); index++){
 
             //resets initial score
             score = 0;
 
             //goes through all characters
-            for (int i = 0; i < word.possibleWordList.get(index).length(); i++){
+            for (int i = 0; i < word.getPossibleWordList().get(index).length(); i++){
 
                 //finds multiplier for given character
                 this.multiplier = multiplier_list[i];
 
                 //adds score based on letter
-                switch(word.possibleWordList.get(index).charAt(i)){
+                switch(word.getPossibleWordList().get(index).charAt(i)){
                     case 'A':
                     case 'E':
                     case 'I':
@@ -131,7 +131,7 @@ public class Score {
                         best_words[y][0] = best_words[y-1][0];
                         best_words[y][1] = best_words[y-1][1];
                     }
-                    best_words[x][0] = word.possibleWordList.get(i);
+                    best_words[x][0] = word.getPossibleWordList().get(i);
                     best_words[x][1] = scores.get(i).toString();
 
                     done = true;
