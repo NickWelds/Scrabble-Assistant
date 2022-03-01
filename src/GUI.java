@@ -24,6 +24,11 @@ import java.util.Objects;
 
 import javafx.util.Duration;
 
+/**
+ * Is responsible for all the visual graphics of the game Assistant.
+ * Interacts with Score Class.
+ * @author Nicholas Milin
+ */
 
 public class GUI extends Application {
 
@@ -349,6 +354,7 @@ public class GUI extends Application {
                     //When buttonConfirmRestrictions is clicked
                     buttonConfirmRestrictions.setOnMouseClicked(event1 -> {
 
+
                         //Checks the amount of letter Restrictions is larger than the 8 characters the user has
                         //If amount of letter Restrictions is larger than 8, makes the user input extra letters until
                         //The amount of restrictions they added + the amount of scrabble letters they have is larger
@@ -358,6 +364,7 @@ public class GUI extends Application {
                             root.getChildren().remove(hBoxInvalidRestrictions);
                             hBoxResultRankInput.getChildren().clear();
                             stringResults.clear();
+                            root.getChildren().remove(hBoxNoResults);
 
                             Score score = new Score();
 
@@ -404,31 +411,39 @@ public class GUI extends Application {
                                 //Gets amount of stringResults if under 5
                                 int maxSliderSize = Math.min(stringResults.size(), 5);
 
-                                //Creates slider
+                                //Creates slider with a max of stringResults.size() or 5
                                 Slider sliderResultsRank = new Slider(1, maxSliderSize, 1);
 
+                                //Adds Settings to slider
                                 sliderSettings(sliderResultsRank);
 
+                                //Adds result rank slider to result rank HBox
                                 hBoxResultRankInput.getChildren().add(sliderResultsRank);
 
+                                //Removes and adds Results HBox
+                                removeAddHBox(root, hBoxResults);
+
+                                //Removes and adds Result Rank Input HBox
                                 removeAddHBox(root, hBoxResultRankInput);
 
+                                //Set results length to first word and makes the results uneditable
                                 setTextFields(results, hBoxResults, stringResults.get(0).length());
-                                setTextFieldEditState(letterRestrictions, false);
                                 setTextFieldEditState(results, false);
 
+                                //Sets each text field to the respective character of Result
                                 for (int i = 0; i < stringResults.get(0).length(); i++) {
                                     results.get(i).setText(String.valueOf(stringResults.get(0).charAt(i)));
                                 }
 
+                                //Updates whenever the result rank slider changes value
                                 sliderResultsRank.valueProperty().addListener((observable1, oldValue1, newValue1) -> {
                                     if (!Objects.equals(newValue1.intValue(), oldValue1.intValue()) && sliderResultsRank.getMax() > 1) {
 
                                         //Gets rank relative to arraylist index
                                         int resultRank = newValue1.intValue() - 1;
 
+                                        //Set results length to first word and makes the results uneditable
                                         setTextFields(results, hBoxResults, stringResults.get(resultRank).length());
-                                        setTextFieldEditState(letterRestrictions, false);
                                         setTextFieldEditState(results, false);
 
                                         //Clears all TextField Texts
@@ -436,13 +451,20 @@ public class GUI extends Application {
                                             i.setText("");
                                         }
 
-                                        //Sets each text field to the
+                                        //Sets each text field to the respective character of Result
                                         for (int i = 0; i < stringResults.get(resultRank).length(); i++) {
                                             results.get(i).setText(String.valueOf(stringResults.get(resultRank).charAt(i)));
                                         }
                                     }
                                 });
                             } else {
+                                //Removes and clears arraylists and HBoxes to avoid overlapping of objects
+                                root.getChildren().remove(results);
+                                results.clear();
+                                root.getChildren().remove(hBoxResultRankInput);
+                                root.getChildren().remove(hBoxResults);
+                                hBoxResultRankInput.getChildren().clear();
+
                                 //Prompts user that no words were found for letters and restrictions
                                 removeAddHBox(root, hBoxNoResults);
                             }
@@ -461,7 +483,6 @@ public class GUI extends Application {
         //Adds HBoxes to root
         root.getChildren().add(hBoxRestrictionsInput);
         root.getChildren().add(hBoxMultiplierButton);
-        root.getChildren().add(hBoxResults);
 
 
         //All variable for Reset Button
