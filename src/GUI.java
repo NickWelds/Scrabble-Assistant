@@ -28,6 +28,16 @@ import javafx.util.Duration;
 public class GUI extends Application {
 
 
+    /**
+     * Adds the settings to each TextField, this includes size, font, padding, alignment, max length and acceptable characters
+     * Got max length from first link
+     * Got acceptable characters from second link
+     * Used the internet as I was
+     *
+     * @param textFields ArrayList<TextField>
+     * @link https://stackoverflow.com/questions/41107912/javafx-input-numbers-or-letters-only-and-allow-to-press-tab-escape-backspace-etc
+     * @link https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength
+     */
     protected void textFieldSettings(ArrayList<TextField> textFields){
         for (TextField i: textFields){
             i.setPrefSize(50,50);
@@ -38,6 +48,7 @@ public class GUI extends Application {
 
             i.setAlignment(Pos.CENTER);
 
+            //Makes the max length of the TextField 1 character long
             i.lengthProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue.intValue() > oldValue.intValue()) {
                     if (i.getText().length() >= 1) {
@@ -46,6 +57,7 @@ public class GUI extends Application {
                 }
             });
 
+            //Makes the TextField only accept a-z and A-Z
             i.textProperty().addListener((observable, oldValue, newValue) ->{
                 if (!newValue.matches("\\sa-zA-Z*")) {
                     i.setText(newValue.replaceAll("[^\\sa-zA-Z]", ""));
@@ -57,21 +69,42 @@ public class GUI extends Application {
         }
     }
 
+
+    /**
+     * Adds # of TextFields and sets their settings and adds them to HBox
+     *
+     * @param textFields ArrayList<TextField>
+     * @param hbox HBox
+     * @param size Number of Text Fields to add
+     */
     protected void setTextFields(ArrayList<TextField> textFields, HBox hbox, int size){
+        //Clears HBox and arraylist
         hbox.getChildren().clear();
         textFields.clear();
 
+        //Adds TextFields to ArrayList
         for(int i = 0; i < size; i++){
             textFields.add(new TextField());
         }
 
+        //Sets Settings of all TextFields
         textFieldSettings(textFields);
 
+        //Adds all TextFields to HBox
         for (TextField i: textFields){
             hbox.getChildren().add(i);
         }
     }
 
+    /**
+     * Creates HBox for basic titles of regular text
+     *
+     * @param hbox HBox
+     * @param text Text
+     * @param y position of text (HBox)
+     * @param size of text
+     * @return HBox
+     */
     public HBox textSet(HBox hbox, Text text, int y, int size){
         hbox.setPrefSize(800, 50);
         hbox.setLayoutY(y);
@@ -82,6 +115,15 @@ public class GUI extends Application {
         return hbox;
     }
 
+    /**
+     * Sets Settings for HBox
+     *
+     * @param hbox HBox
+     * @param x position of HBox
+     * @param y position of HBox
+     * @param prefHeight of HBox
+     * @return HBox
+     */
     public HBox HBoxSettings(HBox hbox, int x, int y, int prefHeight){
         hbox.setPadding(new Insets(0, 12, 0, 12) );
         hbox.setSpacing(10);
@@ -93,6 +135,15 @@ public class GUI extends Application {
         return hbox;
     }
 
+    /**
+     * Settings for buttons
+     *
+     * @param button Button
+     * @param x position of Button
+     * @param y position of Button
+     * @param prefWidth of Button
+     * @param prefHeight of Button
+     */
     public void buttonSettings(Button button, int x, int y, int prefWidth, int prefHeight){
         button.setPrefSize(prefWidth,prefHeight);
         button.setLayoutX(x);
@@ -102,6 +153,11 @@ public class GUI extends Application {
         button.setPadding(new Insets(5, 0, 5, 0));
     }
 
+    /**
+     * Settings for Slider
+     *
+     * @param slider Slider
+     */
     public void sliderSettings(Slider slider){
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
@@ -112,12 +168,24 @@ public class GUI extends Application {
         slider.setPrefSize(300,50);
     }
 
+    /**
+     * Sets the edit status of all TextFields in Array List
+     *
+     * @param textFields ArrayList<TextField>
+     * @param state of editable status
+     */
     public void setTextFieldEditState(ArrayList<TextField> textFields, boolean state){
         for(TextField i: textFields){
             i.setEditable(state);
         }
     }
 
+    /**
+     * Counts and returns the amount of TextFields that contain text
+     *
+     * @param textFields ArrayList<TextField>
+     * @return int
+     */
     public int countTextFieldInputs(ArrayList<TextField> textFields){
         int count = 0;
         for(TextField i: textFields){
@@ -128,6 +196,12 @@ public class GUI extends Application {
         return count;
     }
 
+    /**
+     * Adds and Removes HBox from root to avoid overlapping objects
+     *
+     * @param root Group
+     * @param hBox HBox
+     */
     public void removeAddHBox (Group root, HBox hBox){
         root.getChildren().remove(hBox);
         root.getChildren().add(hBox);
@@ -138,8 +212,14 @@ public class GUI extends Application {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
 
+    //Number of Restrictions
     public int numOfRestrictions = 7;
 
+    /**
+     * Runs all the Graphical Process of the code
+     *
+     * @param stage Stage
+     */
     @Override
     public void start(Stage stage) {
         //Creates root and scene
@@ -152,20 +232,20 @@ public class GUI extends Application {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        //Prompt for User to input scrabble letters
         root.getChildren().add(textSet(new HBox(), new Text("Input Your Scrabble Letters"), 80, 15));
 
-        //TODO Input Letters
+        //HBox for all the users scrabble letters
         HBox hBoxLetterInput = new HBox ();
         HBoxSettings(hBoxLetterInput, 50, 125, 50);
         ArrayList<TextField> allLetters = new ArrayList<>();
         setTextFields(allLetters, hBoxLetterInput, 8);
         root.getChildren().add(hBoxLetterInput);
 
-        //TODO Invalid Amount of Letters HBox
+        //Prompt for when user does not include all the letters they have
         HBox hBoxInvalidLetters = textSet(new HBox(), new Text("Invalid Amount of Scrabble Letters"), 400,25);
 
-        //TODO Input Length of word
-
+        //HBox for the Length of word prompt and slider
         HBox hBoxLengthInput = new HBox ();
         textSet(hBoxLengthInput, new Text("Input the Length of Desired Word:"), 0, 20);
         HBoxSettings(hBoxLengthInput, 50, 200, 100);
@@ -174,78 +254,82 @@ public class GUI extends Application {
         hBoxLengthInput.getChildren().add(sliderWordLength);
         root.getChildren().add(hBoxLengthInput);
 
-        //TODO Input Restrictions text HBox
-
+        //Prompt for User to input their restrictions
         HBox hBoxRestrictionsText = new HBox();
         textSet(hBoxRestrictionsText, new Text("Input Your Restrictions"), 330, 15);
 
-
-        //TODO Letter Restrictions
-
+        //All variables for letter restrictions
         HBox hBoxRestrictionsInput = new HBox ();
         HBoxSettings(hBoxRestrictionsInput, 50, 375, 50);
         ArrayList<TextField> letterRestrictions = new ArrayList<>();
 
-        //TODO Point Multiplier Button HBox
-
+        //All variables for Multiplier Button HBox
         HBox hBoxMultiplierButton = new HBox ();
         HBoxSettings(hBoxMultiplierButton, 50, 435, 20);
         ArrayList<Button> multiplierButtons = new ArrayList<>();
 
-        //TODO Final Result HBox
-
+        //All variables for final result
         HBox hBoxResults = new HBox ();
         HBoxSettings(hBoxResults, 50, 600, 50);
         ArrayList<TextField> results = new ArrayList<>();
 
-        //TODO Slider Result Rank
-
+        //All variables for Result Rank Input
         HBox hBoxResultRankInput = new HBox ();
         ArrayList<String> stringResults = new ArrayList<>();
 
-        //TODO Commit Restriction button
+        //Button for program to find the best words
         Button buttonConfirmRestrictions = new Button("Find Words");
         buttonSettings(buttonConfirmRestrictions, 300, 500, 200, 50);
 
-        //TODO Invalid Amount of Restrictions HBox
+        //Prompt for Invalid Restrictions
         HBox hBoxInvalidRestrictions  = textSet(new HBox(), new Text("Invalid Amount of Restrictions"), 625,25);
 
+        //Prompt for Invalid Restrictions
+        HBox hBoxNoResults  = textSet(new HBox(), new Text("No Matches Found"), 625,25);
+
+        //Updates everytime the word length slider changes value
         sliderWordLength.valueProperty().addListener((observable, oldValue, newValue) ->{
             if (!Objects.equals(newValue.intValue(), oldValue.intValue())) {
 
+
+                //Checks if the user has input all of their scrabble letters
                 if(countTextFieldInputs(allLetters) == allLetters.size()) {
 
+                    //Removes HBoxes and clears arraylists/HBox to avoid duplicates
                     root.getChildren().remove(hBoxInvalidLetters);
                     root.getChildren().remove(hBoxResultRankInput);
                     hBoxResults.getChildren().clear();
                     results.clear();
                     root.getChildren().remove(hBoxRestrictionsText);
 
+                    //Sets users scrabble letters input uneditable
                     setTextFieldEditState(allLetters, false);
 
-
-
+                    //Loads and adds letterRestrictions to hBoxRestrictionsInput
                     setTextFields(letterRestrictions, hBoxRestrictionsInput, (int) sliderWordLength.getValue());
-
 
                     root.getChildren().add(hBoxRestrictionsText);
 
-
+                    //Clears multiplierButton Arraylist and HBox
                     hBoxMultiplierButton.getChildren().clear();
                     multiplierButtons.clear();
 
+                    //Add Buttons to multiplierButtons with "-" as the text
                     for (int i = 0; i < letterRestrictions.size(); i++) {
                         multiplierButtons.add(new Button("-"));
                     }
 
+                    //Adds button settings to multiplierButtons
                     for (Button i : multiplierButtons) {
                         buttonSettings(i, 300, 500, 50, 20);
                     }
 
+                    //Adds all multiplierButtons to hBoxMultiplierButton
                     for (Button i : multiplierButtons) {
                         hBoxMultiplierButton.getChildren().add(i);
                     }
 
+                    //Edits the text of the button based on how many times it is pressed
                     for (Button i : multiplierButtons) {
                         i.setOnMouseClicked(event1 -> {
                             if (i.getText().equals("-")) {
@@ -258,24 +342,32 @@ public class GUI extends Application {
                         });
                     }
 
+                    //Removes and adds buttonConfirmRestrictions to root
                     root.getChildren().remove(buttonConfirmRestrictions);
                     root.getChildren().add(buttonConfirmRestrictions);
 
+                    //When buttonConfirmRestrictions is clicked
                     buttonConfirmRestrictions.setOnMouseClicked(event1 -> {
 
+                        //Checks the amount of letter Restrictions is larger than the 8 characters the user has
+                        //If amount of letter Restrictions is larger than 8, makes the user input extra letters until
+                        //The amount of restrictions they added + the amount of scrabble letters they have is larger
+                        //or equal to their desired length of word
                         if (!(letterRestrictions.size() > allLetters.size() && countTextFieldInputs(letterRestrictions) < letterRestrictions.size() - allLetters.size())) {
+                            //Removes HBoxes and clears arraylists/HBox to avoid duplicates
                             root.getChildren().remove(hBoxInvalidRestrictions);
                             hBoxResultRankInput.getChildren().clear();
                             stringResults.clear();
 
                             Score score = new Score();
 
+                            //All variables to comply with Score's Parameter Lists
                             int[] multiplier_list = new int[letterRestrictions.size()];
                             char[] characters = new char[allLetters.size()];
                             char[] restrictions = new char[letterRestrictions.size()];
                             int w_length = letterRestrictions.size();
 
-
+                            //Converts button text to integers for multipliers
                             for(int i = 0; i < letterRestrictions.size(); i++){
                                 if (multiplierButtons.get(i).getText().equals("-")) {
                                     multiplier_list[i] = 1;
@@ -286,10 +378,12 @@ public class GUI extends Application {
                                 }
                             }
 
+                            //Gets Character of all scrabble letter inputs
                             for(int i = 0; i < allLetters.size(); i++){
                                 characters[i] = allLetters.get(i).getText().charAt(0);
                             }
 
+                            //Gets Character of all letter restrictions inputs
                             for(int i = 0; i < letterRestrictions.size(); i++){
                                 if (letterRestrictions.get(i).getText().length() == 0){
                                     restrictions[i] = '\0';
@@ -298,15 +392,19 @@ public class GUI extends Application {
                                 }
                             }
 
-                            ArrayList<String> other = score.sort_words(multiplier_list, characters, restrictions, w_length);
-                            stringResults.addAll(other);
+                            //Gets the top 5 results
+                            stringResults.addAll(score.sort_words(multiplier_list, characters, restrictions, w_length));
 
+                            //Sets Desired word rank text and adds settings to HBox
                             textSet(hBoxResultRankInput, new Text("Input Desired Word Rank:"), 0, 20);
                             HBoxSettings(hBoxResultRankInput, 50, 700, 50);
 
+                            //Checks of there are any results is not equal to zero
                             if(stringResults.size() != 0){
+                                //Gets amount of stringResults if under 5
                                 int maxSliderSize = Math.min(stringResults.size(), 5);
 
+                                //Creates slider
                                 Slider sliderResultsRank = new Slider(1, maxSliderSize, 1);
 
                                 sliderSettings(sliderResultsRank);
@@ -326,50 +424,64 @@ public class GUI extends Application {
                                 sliderResultsRank.valueProperty().addListener((observable1, oldValue1, newValue1) -> {
                                     if (!Objects.equals(newValue1.intValue(), oldValue1.intValue()) && sliderResultsRank.getMax() > 1) {
 
+                                        //Gets rank relative to arraylist index
                                         int resultRank = newValue1.intValue() - 1;
 
                                         setTextFields(results, hBoxResults, stringResults.get(resultRank).length());
                                         setTextFieldEditState(letterRestrictions, false);
                                         setTextFieldEditState(results, false);
 
+                                        //Clears all TextField Texts
                                         for(TextField i: results){
                                             i.setText("");
                                         }
 
+                                        //Sets each text field to the
                                         for (int i = 0; i < stringResults.get(resultRank).length(); i++) {
                                             results.get(i).setText(String.valueOf(stringResults.get(resultRank).charAt(i)));
                                         }
                                     }
                                 });
                             } else {
-                                removeAddHBox(root, hBoxInvalidRestrictions);
+                                //Prompts user that no words were found for letters and restrictions
+                                removeAddHBox(root, hBoxNoResults);
                             }
                         } else {
+                            //Prompts user that their amount of restrictions is invalid
                             removeAddHBox(root, hBoxInvalidRestrictions);
                         }
                     });
                 } else {
+                    //Prompts user that they haven't filled out all their letters
                     removeAddHBox(root, hBoxInvalidLetters);
                 }
             }
         });
 
+        //Adds HBoxes to root
         root.getChildren().add(hBoxRestrictionsInput);
         root.getChildren().add(hBoxMultiplierButton);
         root.getChildren().add(hBoxResults);
 
 
-        //TODO Reset button for restrictions
+        //All variable for Reset Button
         Button buttonReset = new Button("Reset");
         buttonSettings(buttonReset, 670, 130, 80, 40);
         root.getChildren().add(buttonReset);
 
+        //When Reset button is pressed
         buttonReset.setOnMouseClicked(event -> {
 
+            //Clears all scrabble input
             for(TextField i: allLetters){
                 i.setText("");
             }
 
+            //Sets all scrabble letters editable
+            setTextFieldEditState(allLetters, true);
+
+            //Removes everything on screen past the word length input
+            //Clears arraylists and HBoxes
             root.getChildren().remove(hBoxInvalidLetters);
             root.getChildren().remove(hBoxResultRankInput);
             hBoxResults.getChildren().clear();
@@ -385,11 +497,9 @@ public class GUI extends Application {
 
             root.getChildren().remove(hBoxInvalidRestrictions);
             root.getChildren().remove(hBoxInvalidLetters);
-
-            setTextFieldEditState(allLetters, true);
-
         });
 
+        //Sets background of program to Official Scrabble Red
         gc.setFill(new Color(0.71764705882,0,0.02352941176, 1));
         gc.fillRect(0, 0, WIDTH, HEIGHT);
 
@@ -412,6 +522,7 @@ public class GUI extends Application {
                     gc1.setFill(new Color(0.71764705882,0,0.02352941176, 1));
                     gc1.fillRect(0, 0, WIDTH, HEIGHT);
 
+                    //Updates value numOfRestrictions from slider
                     numOfRestrictions = (int)sliderWordLength.getValue();
 
                 }
