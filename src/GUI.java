@@ -244,7 +244,7 @@ public class GUI extends Application {
         HBox hBoxLetterInput = new HBox ();
         HBoxSettings(hBoxLetterInput, 50, 125, 50);
         ArrayList<TextField> allLetters = new ArrayList<>();
-        setTextFields(allLetters, hBoxLetterInput, 8);
+        setTextFields(allLetters, hBoxLetterInput, 7);
         root.getChildren().add(hBoxLetterInput);
 
         //Prompt for when user does not include all the letters they have
