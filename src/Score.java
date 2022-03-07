@@ -20,6 +20,9 @@ public class Score {
     //creates new arraylist of scores
     public ArrayList<Integer> scores = new ArrayList<>();
 
+    //creates final arraylist of best words without scores
+    public ArrayList<String> final_word_list = new ArrayList<>();
+
     //creates new word object
     Word word = new Word();
     GUI gui = new GUI();
@@ -46,6 +49,7 @@ public class Score {
 
                 //finds multiplier for given character
                 this.multiplier = multiplier_list[i];
+
 
                 //adds score based on letter
                 switch(word.getPossibleWordList().get(index).charAt(i)){
@@ -142,9 +146,6 @@ public class Score {
             done = false;
 
         }
-
-        //creates final arraylist of best words without scores
-        ArrayList<String> final_word_list = new ArrayList<>();
 
         //fills final arraylist of best words without scores
         for (int i = 0; i < list_length; i++){
