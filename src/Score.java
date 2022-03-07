@@ -63,7 +63,7 @@ public class Score {
                     case 'S':
                     case 'T':
                     case 'U':
-                        score += 1 *multiplier;
+                        score += multiplier;
                         break;
                     case 'D':
                     case 'G':
